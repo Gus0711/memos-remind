@@ -105,3 +105,34 @@ CREATE TABLE reaction (
   reaction_type TEXT NOT NULL,
   UNIQUE(creator_id, content_id, reaction_type)
 );
+
+-- reminder
+CREATE TABLE reminder (
+  id SERIAL PRIMARY KEY,
+  uid VARCHAR(32) NOT NULL UNIQUE,
+  memo_id INTEGER NOT NULL REFERENCES memo(id) ON DELETE CASCADE,
+  creator_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+  remind_at BIGINT NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+  created_ts BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW()),
+  updated_ts BIGINT NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())
+);
+
+CREATE INDEX idx_reminder_remind_at ON reminder(remind_at);
+CREATE INDEX idx_reminder_creator_id ON reminder(creator_id);
+CREATE INDEX idx_reminder_status ON reminder(status);
+CREATE INDEX idx_reminder_memo_id ON reminder(memo_id);
+
+-- push_subscription
+CREATE TABLE push_subscription (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  endpoint TEXT NOT NULL UNIQUE,
+  p256dh VARCHAR(255) NOT NULL,
+  auth VARCHAR(255) NOT NULL,
+  user_agent TEXT,
+  created_ts INTEGER NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())::INTEGER,
+  CONSTRAINT fk_push_subscription_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_push_subscription_user_id ON push_subscription(user_id);

@@ -33,6 +33,8 @@ const (
 	InstanceSettingKey_STORAGE InstanceSettingKey = 3
 	// MEMO_RELATED is the key for memo related settings.
 	InstanceSettingKey_MEMO_RELATED InstanceSettingKey = 4
+	// WEB_PUSH is the key for web push notification settings.
+	InstanceSettingKey_WEB_PUSH InstanceSettingKey = 5
 )
 
 // Enum value maps for InstanceSettingKey.
@@ -43,6 +45,7 @@ var (
 		2: "GENERAL",
 		3: "STORAGE",
 		4: "MEMO_RELATED",
+		5: "WEB_PUSH",
 	}
 	InstanceSettingKey_value = map[string]int32{
 		"INSTANCE_SETTING_KEY_UNSPECIFIED": 0,
@@ -50,6 +53,7 @@ var (
 		"GENERAL":                          2,
 		"STORAGE":                          3,
 		"MEMO_RELATED":                     4,
+		"WEB_PUSH":                         5,
 	}
 )
 
@@ -144,6 +148,7 @@ type InstanceSetting struct {
 	//	*InstanceSetting_GeneralSetting
 	//	*InstanceSetting_StorageSetting
 	//	*InstanceSetting_MemoRelatedSetting
+	//	*InstanceSetting_WebPushSetting
 	Value         isInstanceSetting_Value `protobuf_oneof:"value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -229,6 +234,15 @@ func (x *InstanceSetting) GetMemoRelatedSetting() *InstanceMemoRelatedSetting {
 	return nil
 }
 
+func (x *InstanceSetting) GetWebPushSetting() *InstanceWebPushSetting {
+	if x != nil {
+		if x, ok := x.Value.(*InstanceSetting_WebPushSetting); ok {
+			return x.WebPushSetting
+		}
+	}
+	return nil
+}
+
 type isInstanceSetting_Value interface {
 	isInstanceSetting_Value()
 }
@@ -249,6 +263,10 @@ type InstanceSetting_MemoRelatedSetting struct {
 	MemoRelatedSetting *InstanceMemoRelatedSetting `protobuf:"bytes,5,opt,name=memo_related_setting,json=memoRelatedSetting,proto3,oneof"`
 }
 
+type InstanceSetting_WebPushSetting struct {
+	WebPushSetting *InstanceWebPushSetting `protobuf:"bytes,6,opt,name=web_push_setting,json=webPushSetting,proto3,oneof"`
+}
+
 func (*InstanceSetting_BasicSetting) isInstanceSetting_Value() {}
 
 func (*InstanceSetting_GeneralSetting) isInstanceSetting_Value() {}
@@ -256,6 +274,8 @@ func (*InstanceSetting_GeneralSetting) isInstanceSetting_Value() {}
 func (*InstanceSetting_StorageSetting) isInstanceSetting_Value() {}
 
 func (*InstanceSetting_MemoRelatedSetting) isInstanceSetting_Value() {}
+
+func (*InstanceSetting_WebPushSetting) isInstanceSetting_Value() {}
 
 type InstanceBasicSetting struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -720,17 +740,81 @@ func (x *InstanceMemoRelatedSetting) GetReactions() []string {
 	return nil
 }
 
+type InstanceWebPushSetting struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Whether web push notifications are enabled.
+	Enabled bool `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	// The VAPID private key (base64 URL-safe encoded).
+	VapidPrivateKey string `protobuf:"bytes,2,opt,name=vapid_private_key,json=vapidPrivateKey,proto3" json:"vapid_private_key,omitempty"`
+	// The VAPID public key (base64 URL-safe encoded).
+	VapidPublicKey string `protobuf:"bytes,3,opt,name=vapid_public_key,json=vapidPublicKey,proto3" json:"vapid_public_key,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *InstanceWebPushSetting) Reset() {
+	*x = InstanceWebPushSetting{}
+	mi := &file_store_instance_setting_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *InstanceWebPushSetting) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*InstanceWebPushSetting) ProtoMessage() {}
+
+func (x *InstanceWebPushSetting) ProtoReflect() protoreflect.Message {
+	mi := &file_store_instance_setting_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use InstanceWebPushSetting.ProtoReflect.Descriptor instead.
+func (*InstanceWebPushSetting) Descriptor() ([]byte, []int) {
+	return file_store_instance_setting_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *InstanceWebPushSetting) GetEnabled() bool {
+	if x != nil {
+		return x.Enabled
+	}
+	return false
+}
+
+func (x *InstanceWebPushSetting) GetVapidPrivateKey() string {
+	if x != nil {
+		return x.VapidPrivateKey
+	}
+	return ""
+}
+
+func (x *InstanceWebPushSetting) GetVapidPublicKey() string {
+	if x != nil {
+		return x.VapidPublicKey
+	}
+	return ""
+}
+
 var File_store_instance_setting_proto protoreflect.FileDescriptor
 
 const file_store_instance_setting_proto_rawDesc = "" +
 	"\n" +
-	"\x1cstore/instance_setting.proto\x12\vmemos.store\"\x94\x03\n" +
+	"\x1cstore/instance_setting.proto\x12\vmemos.store\"\xe5\x03\n" +
 	"\x0fInstanceSetting\x121\n" +
 	"\x03key\x18\x01 \x01(\x0e2\x1f.memos.store.InstanceSettingKeyR\x03key\x12H\n" +
 	"\rbasic_setting\x18\x02 \x01(\v2!.memos.store.InstanceBasicSettingH\x00R\fbasicSetting\x12N\n" +
 	"\x0fgeneral_setting\x18\x03 \x01(\v2#.memos.store.InstanceGeneralSettingH\x00R\x0egeneralSetting\x12N\n" +
 	"\x0fstorage_setting\x18\x04 \x01(\v2#.memos.store.InstanceStorageSettingH\x00R\x0estorageSetting\x12[\n" +
-	"\x14memo_related_setting\x18\x05 \x01(\v2'.memos.store.InstanceMemoRelatedSettingH\x00R\x12memoRelatedSettingB\a\n" +
+	"\x14memo_related_setting\x18\x05 \x01(\v2'.memos.store.InstanceMemoRelatedSettingH\x00R\x12memoRelatedSetting\x12O\n" +
+	"\x10web_push_setting\x18\x06 \x01(\v2#.memos.store.InstanceWebPushSettingH\x00R\x0ewebPushSettingB\a\n" +
 	"\x05value\"\\\n" +
 	"\x14InstanceBasicSetting\x12\x1d\n" +
 	"\n" +
@@ -771,13 +855,18 @@ const file_store_instance_setting_proto_rawDesc = "" +
 	"\x18display_with_update_time\x18\x02 \x01(\bR\x15displayWithUpdateTime\x120\n" +
 	"\x14content_length_limit\x18\x03 \x01(\x05R\x12contentLengthLimit\x127\n" +
 	"\x18enable_double_click_edit\x18\x04 \x01(\bR\x15enableDoubleClickEdit\x12\x1c\n" +
-	"\treactions\x18\a \x03(\tR\treactions*q\n" +
+	"\treactions\x18\a \x03(\tR\treactions\"\x88\x01\n" +
+	"\x16InstanceWebPushSetting\x12\x18\n" +
+	"\aenabled\x18\x01 \x01(\bR\aenabled\x12*\n" +
+	"\x11vapid_private_key\x18\x02 \x01(\tR\x0fvapidPrivateKey\x12(\n" +
+	"\x10vapid_public_key\x18\x03 \x01(\tR\x0evapidPublicKey*\x7f\n" +
 	"\x12InstanceSettingKey\x12$\n" +
 	" INSTANCE_SETTING_KEY_UNSPECIFIED\x10\x00\x12\t\n" +
 	"\x05BASIC\x10\x01\x12\v\n" +
 	"\aGENERAL\x10\x02\x12\v\n" +
 	"\aSTORAGE\x10\x03\x12\x10\n" +
-	"\fMEMO_RELATED\x10\x04B\x9f\x01\n" +
+	"\fMEMO_RELATED\x10\x04\x12\f\n" +
+	"\bWEB_PUSH\x10\x05B\x9f\x01\n" +
 	"\x0fcom.memos.storeB\x14InstanceSettingProtoP\x01Z)github.com/usememos/memos/proto/gen/store\xa2\x02\x03MSX\xaa\x02\vMemos.Store\xca\x02\vMemos\\Store\xe2\x02\x17Memos\\Store\\GPBMetadata\xea\x02\fMemos::Storeb\x06proto3"
 
 var (
@@ -793,7 +882,7 @@ func file_store_instance_setting_proto_rawDescGZIP() []byte {
 }
 
 var file_store_instance_setting_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_store_instance_setting_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_store_instance_setting_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_store_instance_setting_proto_goTypes = []any{
 	(InstanceSettingKey)(0),                 // 0: memos.store.InstanceSettingKey
 	(InstanceStorageSetting_StorageType)(0), // 1: memos.store.InstanceStorageSetting.StorageType
@@ -804,6 +893,7 @@ var file_store_instance_setting_proto_goTypes = []any{
 	(*InstanceStorageSetting)(nil),          // 6: memos.store.InstanceStorageSetting
 	(*StorageS3Config)(nil),                 // 7: memos.store.StorageS3Config
 	(*InstanceMemoRelatedSetting)(nil),      // 8: memos.store.InstanceMemoRelatedSetting
+	(*InstanceWebPushSetting)(nil),          // 9: memos.store.InstanceWebPushSetting
 }
 var file_store_instance_setting_proto_depIdxs = []int32{
 	0, // 0: memos.store.InstanceSetting.key:type_name -> memos.store.InstanceSettingKey
@@ -811,14 +901,15 @@ var file_store_instance_setting_proto_depIdxs = []int32{
 	4, // 2: memos.store.InstanceSetting.general_setting:type_name -> memos.store.InstanceGeneralSetting
 	6, // 3: memos.store.InstanceSetting.storage_setting:type_name -> memos.store.InstanceStorageSetting
 	8, // 4: memos.store.InstanceSetting.memo_related_setting:type_name -> memos.store.InstanceMemoRelatedSetting
-	5, // 5: memos.store.InstanceGeneralSetting.custom_profile:type_name -> memos.store.InstanceCustomProfile
-	1, // 6: memos.store.InstanceStorageSetting.storage_type:type_name -> memos.store.InstanceStorageSetting.StorageType
-	7, // 7: memos.store.InstanceStorageSetting.s3_config:type_name -> memos.store.StorageS3Config
-	8, // [8:8] is the sub-list for method output_type
-	8, // [8:8] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	9, // 5: memos.store.InstanceSetting.web_push_setting:type_name -> memos.store.InstanceWebPushSetting
+	5, // 6: memos.store.InstanceGeneralSetting.custom_profile:type_name -> memos.store.InstanceCustomProfile
+	1, // 7: memos.store.InstanceStorageSetting.storage_type:type_name -> memos.store.InstanceStorageSetting.StorageType
+	7, // 8: memos.store.InstanceStorageSetting.s3_config:type_name -> memos.store.StorageS3Config
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_store_instance_setting_proto_init() }
@@ -831,6 +922,7 @@ func file_store_instance_setting_proto_init() {
 		(*InstanceSetting_GeneralSetting)(nil),
 		(*InstanceSetting_StorageSetting)(nil),
 		(*InstanceSetting_MemoRelatedSetting)(nil),
+		(*InstanceSetting_WebPushSetting)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -838,7 +930,7 @@ func file_store_instance_setting_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_store_instance_setting_proto_rawDesc), len(file_store_instance_setting_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

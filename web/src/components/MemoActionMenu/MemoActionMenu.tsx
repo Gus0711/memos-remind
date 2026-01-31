@@ -1,6 +1,7 @@
 import {
   ArchiveIcon,
   ArchiveRestoreIcon,
+  BellIcon,
   BookmarkMinusIcon,
   BookmarkPlusIcon,
   CopyIcon,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import ReminderDialog from "@/components/ReminderDialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -36,6 +38,7 @@ const MemoActionMenu = (props: MemoActionMenuProps) => {
   // Dialog state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [removeTasksDialogOpen, setRemoveTasksDialogOpen] = useState(false);
+  const [reminderDialogOpen, setReminderDialogOpen] = useState(false);
 
   // Derived state
   const hasCompletedTaskList = hasCompletedTasks(memo.content);
@@ -81,6 +84,12 @@ const MemoActionMenu = (props: MemoActionMenuProps) => {
               <Edit3Icon className="w-4 h-auto" />
               {t("common.edit")}
             </DropdownMenuItem>
+            {!isComment && (
+              <DropdownMenuItem onClick={() => setReminderDialogOpen(true)}>
+                <BellIcon className="w-4 h-auto" />
+                {t("reminder.add-reminder")}
+              </DropdownMenuItem>
+            )}
           </>
         )}
 
@@ -154,6 +163,9 @@ const MemoActionMenu = (props: MemoActionMenuProps) => {
         onConfirm={confirmRemoveCompletedTaskListItems}
         confirmVariant="destructive"
       />
+
+      {/* Reminder dialog */}
+      <ReminderDialog open={reminderDialogOpen} onOpenChange={setReminderDialogOpen} memoName={memo.name} />
     </DropdownMenu>
   );
 };

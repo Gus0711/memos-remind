@@ -10,6 +10,7 @@ import { loadTheme } from "@/utils/theme";
 import LocaleSelect from "../LocaleSelect";
 import ThemeSelect from "../ThemeSelect";
 import VisibilityIcon from "../VisibilityIcon";
+import PushNotificationSection from "./PushNotificationSection";
 import SettingGroup from "./SettingGroup";
 import SettingRow from "./SettingRow";
 import SettingSection from "./SettingSection";
@@ -101,6 +102,8 @@ const PreferencesSection = () => {
           </Select>
         </SettingRow>
       </SettingGroup>
+
+      <PushNotificationSection />
 
       <SettingGroup showSeparator>
         <WebhookSection />

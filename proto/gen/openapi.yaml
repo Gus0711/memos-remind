@@ -15,19 +15,13 @@ paths:
             parameters:
                 - name: pageSize
                   in: query
-                  description: |-
-                    The maximum number of activities to return.
-                     The service may return fewer than this value.
-                     If unspecified, at most 100 activities will be returned.
-                     The maximum value is 1000; values above 1000 will be coerced to 1000.
+                  description: "The maximum number of activities to return.\r\n The service may return fewer than this value.\r\n If unspecified, at most 100 activities will be returned.\r\n The maximum value is 1000; values above 1000 will be coerced to 1000."
                   schema:
                     type: integer
                     format: int32
                 - name: pageToken
                   in: query
-                  description: |-
-                    A page token, received from a previous `ListActivities` call.
-                     Provide this to retrieve the subsequent page.
+                  description: "A page token, received from a previous `ListActivities` call.\r\n Provide this to retrieve the subsequent page."
                   schema:
                     type: string
             responses:
@@ -78,35 +72,23 @@ paths:
             parameters:
                 - name: pageSize
                   in: query
-                  description: |-
-                    Optional. The maximum number of attachments to return.
-                     The service may return fewer than this value.
-                     If unspecified, at most 50 attachments will be returned.
-                     The maximum value is 1000; values above 1000 will be coerced to 1000.
+                  description: "Optional. The maximum number of attachments to return.\r\n The service may return fewer than this value.\r\n If unspecified, at most 50 attachments will be returned.\r\n The maximum value is 1000; values above 1000 will be coerced to 1000."
                   schema:
                     type: integer
                     format: int32
                 - name: pageToken
                   in: query
-                  description: |-
-                    Optional. A page token, received from a previous `ListAttachments` call.
-                     Provide this to retrieve the subsequent page.
+                  description: "Optional. A page token, received from a previous `ListAttachments` call.\r\n Provide this to retrieve the subsequent page."
                   schema:
                     type: string
                 - name: filter
                   in: query
-                  description: |-
-                    Optional. Filter to apply to the list results.
-                     Example: "mime_type==\"image/png\"" or "filename.contains(\"test\")"
-                     Supported operators: =, !=, <, <=, >, >=, : (contains), in
-                     Supported fields: filename, mime_type, create_time, memo
+                  description: "Optional. Filter to apply to the list results.\r\n Example: \"mime_type==\\\"image/png\\\"\" or \"filename.contains(\\\"test\\\")\"\r\n Supported operators: =, !=, <, <=, >, >=, : (contains), in\r\n Supported fields: filename, mime_type, create_time, memo"
                   schema:
                     type: string
                 - name: orderBy
                   in: query
-                  description: |-
-                    Optional. The order to sort results by.
-                     Example: "create_time desc" or "filename asc"
+                  description: "Optional. The order to sort results by.\r\n Example: \"create_time desc\" or \"filename asc\""
                   schema:
                     type: string
             responses:
@@ -130,9 +112,7 @@ paths:
             parameters:
                 - name: attachmentId
                   in: query
-                  description: |-
-                    Optional. The attachment ID to use for this attachment.
-                     If empty, a unique ID will be generated.
+                  description: "Optional. The attachment ID to use for this attachment.\r\n If empty, a unique ID will be generated."
                   schema:
                     type: string
             requestBody:
@@ -243,10 +223,7 @@ paths:
         get:
             tags:
                 - AuthService
-            description: |-
-                GetCurrentUser returns the authenticated user's information.
-                 Validates the access token and returns user details.
-                 Similar to OIDC's /userinfo endpoint.
+            description: "GetCurrentUser returns the authenticated user's information.\r\n Validates the access token and returns user details.\r\n Similar to OIDC's /userinfo endpoint."
             operationId: AuthService_GetCurrentUser
             responses:
                 "200":
@@ -265,10 +242,7 @@ paths:
         post:
             tags:
                 - AuthService
-            description: |-
-                RefreshToken exchanges a valid refresh token for a new access token.
-                 The refresh token is read from the HttpOnly cookie.
-                 Returns a new short-lived access token.
+            description: "RefreshToken exchanges a valid refresh token for a new access token.\r\n The refresh token is read from the HttpOnly cookie.\r\n Returns a new short-lived access token."
             operationId: AuthService_RefreshToken
             requestBody:
                 content:
@@ -293,10 +267,7 @@ paths:
         post:
             tags:
                 - AuthService
-            description: |-
-                SignIn authenticates a user with credentials and returns tokens.
-                 On success, returns an access token and sets a refresh token cookie.
-                 Supports password-based and SSO authentication methods.
+            description: "SignIn authenticates a user with credentials and returns tokens.\r\n On success, returns an access token and sets a refresh token cookie.\r\n Supports password-based and SSO authentication methods."
             operationId: AuthService_SignIn
             requestBody:
                 content:
@@ -321,9 +292,7 @@ paths:
         post:
             tags:
                 - AuthService
-            description: |-
-                SignOut terminates the user's authentication.
-                 Revokes the refresh token and clears the authentication cookie.
+            description: "SignOut terminates the user's authentication.\r\n Revokes the refresh token and clears the authentication cookie."
             operationId: AuthService_SignOut
             responses:
                 "200":
@@ -362,9 +331,7 @@ paths:
             parameters:
                 - name: identityProviderId
                   in: query
-                  description: |-
-                    Optional. The ID to use for the identity provider, which will become the final component of the resource name.
-                     If not provided, the system will generate one.
+                  description: "Optional. The ID to use for the identity provider, which will become the final component of the resource name.\r\n If not provided, the system will generate one."
                   schema:
                     type: string
             requestBody:
@@ -448,9 +415,7 @@ paths:
                     type: string
                 - name: updateMask
                   in: query
-                  description: |-
-                    Required. The update mask applies to the resource. Only the top level fields of
-                     IdentityProvider are supported.
+                  description: "Required. The update mask applies to the resource. Only the top level fields of\r\n IdentityProvider are supported."
                   schema:
                     type: string
                     format: field-mask
@@ -486,6 +451,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/InstanceProfile'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/instance/vapidPublicKey:
+        get:
+            tags:
+                - InstanceService
+            description: "GetVAPIDPublicKey returns the VAPID public key for web push notifications.\r\n This endpoint is public and doesn't require authentication."
+            operationId: InstanceService_GetVAPIDPublicKey
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetVAPIDPublicKeyResponse'
                 default:
                     description: Default error response
                     content:
@@ -564,26 +548,18 @@ paths:
             parameters:
                 - name: pageSize
                   in: query
-                  description: |-
-                    Optional. The maximum number of memos to return.
-                     The service may return fewer than this value.
-                     If unspecified, at most 50 memos will be returned.
-                     The maximum value is 1000; values above 1000 will be coerced to 1000.
+                  description: "Optional. The maximum number of memos to return.\r\n The service may return fewer than this value.\r\n If unspecified, at most 50 memos will be returned.\r\n The maximum value is 1000; values above 1000 will be coerced to 1000."
                   schema:
                     type: integer
                     format: int32
                 - name: pageToken
                   in: query
-                  description: |-
-                    Optional. A page token, received from a previous `ListMemos` call.
-                     Provide this to retrieve the subsequent page.
+                  description: "Optional. A page token, received from a previous `ListMemos` call.\r\n Provide this to retrieve the subsequent page."
                   schema:
                     type: string
                 - name: state
                   in: query
-                  description: |-
-                    Optional. The state of the memos to list.
-                     Default to `NORMAL`. Set to `ARCHIVED` to list archived memos.
+                  description: "Optional. The state of the memos to list.\r\n Default to `NORMAL`. Set to `ARCHIVED` to list archived memos."
                   schema:
                     enum:
                         - STATE_UNSPECIFIED
@@ -593,20 +569,12 @@ paths:
                     format: enum
                 - name: orderBy
                   in: query
-                  description: |-
-                    Optional. The order to sort results by.
-                     Default to "display_time desc".
-                     Supports comma-separated list of fields following AIP-132.
-                     Example: "pinned desc, display_time desc" or "create_time asc"
-                     Supported fields: pinned, display_time, create_time, update_time, name
+                  description: "Optional. The order to sort results by.\r\n Default to \"display_time desc\".\r\n Supports comma-separated list of fields following AIP-132.\r\n Example: \"pinned desc, display_time desc\" or \"create_time asc\"\r\n Supported fields: pinned, display_time, create_time, update_time, name"
                   schema:
                     type: string
                 - name: filter
                   in: query
-                  description: |-
-                    Optional. Filter to apply to the list results.
-                     Filter is a CEL expression to filter memos.
-                     Refer to `Shortcut.filter`.
+                  description: "Optional. Filter to apply to the list results.\r\n Filter is a CEL expression to filter memos.\r\n Refer to `Shortcut.filter`."
                   schema:
                     type: string
                 - name: showDeleted
@@ -635,9 +603,7 @@ paths:
             parameters:
                 - name: memoId
                   in: query
-                  description: |-
-                    Optional. The memo ID to use for this memo.
-                     If empty, a unique ID will be generated.
+                  description: "Optional. The memo ID to use for this memo.\r\n If empty, a unique ID will be generated."
                   schema:
                     type: string
             requestBody:
@@ -1054,6 +1020,188 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/reminders:
+        get:
+            tags:
+                - ReminderService
+            description: ListReminders returns a list of reminders for the current user.
+            operationId: ReminderService_ListReminders
+            parameters:
+                - name: memo
+                  in: query
+                  description: "Optional. Filter by memo.\r\n Format: memos/{memo}"
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  description: Optional. Filter by status.
+                  schema:
+                    enum:
+                        - STATUS_UNSPECIFIED
+                        - PENDING
+                        - TRIGGERED
+                        - DISMISSED
+                    type: string
+                    format: enum
+                - name: pageSize
+                  in: query
+                  description: Optional. The maximum number of reminders to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageToken
+                  in: query
+                  description: Optional. A page token from a previous ListReminders call.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListRemindersResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - ReminderService
+            description: CreateReminder creates a new reminder for a memo.
+            operationId: ReminderService_CreateReminder
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateReminderRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Reminder'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/reminders/{reminder}:
+        get:
+            tags:
+                - ReminderService
+            description: GetReminder gets a reminder by name.
+            operationId: ReminderService_GetReminder
+            parameters:
+                - name: reminder
+                  in: path
+                  description: The reminder id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Reminder'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - ReminderService
+            description: DeleteReminder deletes a reminder.
+            operationId: ReminderService_DeleteReminder
+            parameters:
+                - name: reminder
+                  in: path
+                  description: The reminder id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - ReminderService
+            description: UpdateReminder updates a reminder.
+            operationId: ReminderService_UpdateReminder
+            parameters:
+                - name: reminder
+                  in: path
+                  description: The reminder id.
+                  required: true
+                  schema:
+                    type: string
+                - name: updateMask
+                  in: query
+                  description: Optional. The list of fields to update.
+                  schema:
+                    type: string
+                    format: field-mask
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Reminder'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Reminder'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/reminders/{reminder}:dismiss:
+        post:
+            tags:
+                - ReminderService
+            description: DismissReminder marks a reminder as dismissed.
+            operationId: ReminderService_DismissReminder
+            parameters:
+                - name: reminder
+                  in: path
+                  description: The reminder id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Reminder'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users:
         get:
             tags:
@@ -1063,28 +1211,18 @@ paths:
             parameters:
                 - name: pageSize
                   in: query
-                  description: |-
-                    Optional. The maximum number of users to return.
-                     The service may return fewer than this value.
-                     If unspecified, at most 50 users will be returned.
-                     The maximum value is 1000; values above 1000 will be coerced to 1000.
+                  description: "Optional. The maximum number of users to return.\r\n The service may return fewer than this value.\r\n If unspecified, at most 50 users will be returned.\r\n The maximum value is 1000; values above 1000 will be coerced to 1000."
                   schema:
                     type: integer
                     format: int32
                 - name: pageToken
                   in: query
-                  description: |-
-                    Optional. A page token, received from a previous `ListUsers` call.
-                     Provide this to retrieve the subsequent page.
+                  description: "Optional. A page token, received from a previous `ListUsers` call.\r\n Provide this to retrieve the subsequent page."
                   schema:
                     type: string
                 - name: filter
                   in: query
-                  description: |-
-                    Optional. Filter to apply to the list results.
-                     Example: "username == 'steven'"
-                     Supported operators: ==
-                     Supported fields: username
+                  description: "Optional. Filter to apply to the list results.\r\n Example: \"username == 'steven'\"\r\n Supported operators: ==\r\n Supported fields: username"
                   schema:
                     type: string
                 - name: showDeleted
@@ -1113,10 +1251,7 @@ paths:
             parameters:
                 - name: userId
                   in: query
-                  description: |-
-                    Optional. The user ID to use for this user.
-                     If empty, a unique ID will be generated.
-                     Must match the pattern [a-z0-9-]+
+                  description: "Optional. The user ID to use for this user.\r\n If empty, a unique ID will be generated.\r\n Must match the pattern [a-z0-9-]+"
                   schema:
                     type: string
                 - name: validateOnly
@@ -1126,9 +1261,7 @@ paths:
                     type: boolean
                 - name: requestId
                   in: query
-                  description: |-
-                    Optional. An idempotency token that can be used to ensure that multiple
-                     requests to create a user have the same result.
+                  description: "Optional. An idempotency token that can be used to ensure that multiple\r\n requests to create a user have the same result."
                   schema:
                     type: string
             requestBody:
@@ -1154,11 +1287,7 @@ paths:
         get:
             tags:
                 - UserService
-            description: |-
-                GetUser gets a user by ID or username.
-                 Supports both numeric IDs and username strings:
-                   - users/{id}       (e.g., users/101)
-                   - users/{username} (e.g., users/steven)
+            description: "GetUser gets a user by ID or username.\r\n Supports both numeric IDs and username strings:\r\n   - users/{id}       (e.g., users/101)\r\n   - users/{username} (e.g., users/steven)"
             operationId: UserService_GetUser
             parameters:
                 - name: user
@@ -1169,9 +1298,7 @@ paths:
                     type: string
                 - name: readMask
                   in: query
-                  description: |-
-                    Optional. The fields to return in the response.
-                     If not specified, all fields are returned.
+                  description: "Optional. The fields to return in the response.\r\n If not specified, all fields are returned."
                   schema:
                     type: string
                     format: field-mask
@@ -1371,9 +1498,7 @@ paths:
         get:
             tags:
                 - UserService
-            description: |-
-                ListPersonalAccessTokens returns a list of Personal Access Tokens (PATs) for a user.
-                 PATs are long-lived tokens for API/script access, distinct from short-lived JWT access tokens.
+            description: "ListPersonalAccessTokens returns a list of Personal Access Tokens (PATs) for a user.\r\n PATs are long-lived tokens for API/script access, distinct from short-lived JWT access tokens."
             operationId: UserService_ListPersonalAccessTokens
             parameters:
                 - name: user
@@ -1409,9 +1534,7 @@ paths:
         post:
             tags:
                 - UserService
-            description: |-
-                CreatePersonalAccessToken creates a new Personal Access Token for a user.
-                 The token value is only returned once upon creation.
+            description: "CreatePersonalAccessToken creates a new Personal Access Token for a user.\r\n The token value is only returned once upon creation."
             operationId: UserService_CreatePersonalAccessToken
             parameters:
                 - name: user
@@ -1468,6 +1591,92 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/users/{user}/pushSubscriptions:
+        get:
+            tags:
+                - UserService
+            description: ListUserPushSubscriptions lists push subscriptions for a user.
+            operationId: UserService_ListUserPushSubscriptions
+            parameters:
+                - name: user
+                  in: path
+                  description: The user id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListUserPushSubscriptionsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - UserService
+            description: CreateUserPushSubscription creates a new push subscription for a user.
+            operationId: UserService_CreateUserPushSubscription
+            parameters:
+                - name: user
+                  in: path
+                  description: The user id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PushSubscription'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PushSubscription'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users/{user}/pushSubscriptions/{pushSubscription}:
+        delete:
+            tags:
+                - UserService
+            description: DeleteUserPushSubscription deletes a push subscription.
+            operationId: UserService_DeleteUserPushSubscription
+            parameters:
+                - name: user
+                  in: path
+                  description: The user id.
+                  required: true
+                  schema:
+                    type: string
+                - name: pushSubscription
+                  in: path
+                  description: The pushSubscription id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users/{user}/settings:
         get:
             tags:
@@ -1483,19 +1692,13 @@ paths:
                     type: string
                 - name: pageSize
                   in: query
-                  description: |-
-                    Optional. The maximum number of settings to return.
-                     The service may return fewer than this value.
-                     If unspecified, at most 50 settings will be returned.
-                     The maximum value is 1000; values above 1000 will be coerced to 1000.
+                  description: "Optional. The maximum number of settings to return.\r\n The service may return fewer than this value.\r\n If unspecified, at most 50 settings will be returned.\r\n The maximum value is 1000; values above 1000 will be coerced to 1000."
                   schema:
                     type: integer
                     format: int32
                 - name: pageToken
                   in: query
-                  description: |-
-                    Optional. A page token, received from a previous `ListUserSettings` call.
-                     Provide this to retrieve the subsequent page.
+                  description: "Optional. A page token, received from a previous `ListUserSettings` call.\r\n Provide this to retrieve the subsequent page."
                   schema:
                     type: string
             responses:
@@ -1933,15 +2136,11 @@ components:
                 name:
                     readOnly: true
                     type: string
-                    description: |-
-                        The name of the activity.
-                         Format: activities/{id}
+                    description: "The name of the activity.\r\n Format: activities/{id}"
                 creator:
                     readOnly: true
                     type: string
-                    description: |-
-                        The name of the creator.
-                         Format: users/{user}
+                    description: "The name of the creator.\r\n Format: users/{user}"
                 type:
                     readOnly: true
                     enum:
@@ -1975,14 +2174,10 @@ components:
             properties:
                 memo:
                     type: string
-                    description: |-
-                        The memo name of comment.
-                         Format: memos/{memo}
+                    description: "The memo name of comment.\r\n Format: memos/{memo}"
                 relatedMemo:
                     type: string
-                    description: |-
-                        The name of related memo.
-                         Format: memos/{memo}
+                    description: "The name of related memo.\r\n Format: memos/{memo}"
             description: ActivityMemoCommentPayload represents the payload of a memo comment activity.
         ActivityPayload:
             type: object
@@ -1999,9 +2194,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        The name of the attachment.
-                         Format: attachments/{attachment}
+                    description: "The name of the attachment.\r\n Format: attachments/{attachment}"
                 createTime:
                     readOnly: true
                     type: string
@@ -2027,9 +2220,7 @@ components:
                     description: Output only. The size of the attachment in bytes.
                 memo:
                     type: string
-                    description: |-
-                        Optional. The related memo. Refer to `Memo.name`.
-                         Format: memos/{memo}
+                    description: "Optional. The related memo. Refer to `Memo.name`.\r\n Format: memos/{memo}"
         CreatePersonalAccessTokenRequest:
             required:
                 - parent
@@ -2037,9 +2228,7 @@ components:
             properties:
                 parent:
                     type: string
-                    description: |-
-                        Required. The parent resource where this token will be created.
-                         Format: users/{user}
+                    description: "Required. The parent resource where this token will be created.\r\n Format: users/{user}"
                 description:
                     type: string
                     description: Optional. Description of the personal access token.
@@ -2056,9 +2245,20 @@ components:
                     description: The personal access token metadata.
                 token:
                     type: string
-                    description: |-
-                        The actual token value - only returned on creation.
-                         This is the only time the token value will be visible.
+                    description: "The actual token value - only returned on creation.\r\n This is the only time the token value will be visible."
+        CreateReminderRequest:
+            required:
+                - memo
+                - remindAt
+            type: object
+            properties:
+                memo:
+                    type: string
+                    description: "Required. The memo to create a reminder for.\r\n Format: memos/{memo}"
+                remindAt:
+                    type: string
+                    description: Required. When the reminder should trigger.
+                    format: date-time
         FieldMapping:
             type: object
             properties:
@@ -2087,6 +2287,13 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/User'
                     description: The authenticated user's information.
+        GetVAPIDPublicKeyResponse:
+            type: object
+            properties:
+                publicKey:
+                    type: string
+                    description: "The VAPID public key for web push subscriptions (base64 URL-safe encoded).\r\n Empty if web push is not enabled."
+            description: Response containing the VAPID public key.
         GoogleProtobufAny:
             type: object
             properties:
@@ -2104,9 +2311,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        The resource name of the identity provider.
-                         Format: identity-providers/{idp}
+                    description: "The resource name of the identity provider.\r\n Format: identity-providers/{idp}"
                 type:
                     enum:
                         - TYPE_UNSPECIFIED
@@ -2144,24 +2349,22 @@ components:
                 admin:
                     allOf:
                         - $ref: '#/components/schemas/User'
-                    description: |-
-                        The first administrator who set up this instance.
-                         When null, instance requires initial setup (creating the first admin account).
+                    description: "The first administrator who set up this instance.\r\n When null, instance requires initial setup (creating the first admin account)."
             description: Instance profile message containing basic instance information.
         InstanceSetting:
             type: object
             properties:
                 name:
                     type: string
-                    description: |-
-                        The name of the instance setting.
-                         Format: instance/settings/{setting}
+                    description: "The name of the instance setting.\r\n Format: instance/settings/{setting}"
                 generalSetting:
                     $ref: '#/components/schemas/InstanceSetting_GeneralSetting'
                 storageSetting:
                     $ref: '#/components/schemas/InstanceSetting_StorageSetting'
                 memoRelatedSetting:
                     $ref: '#/components/schemas/InstanceSetting_MemoRelatedSetting'
+                webPushSetting:
+                    $ref: '#/components/schemas/InstanceSetting_WebPushSetting'
             description: An instance setting resource.
         InstanceSetting_GeneralSetting:
             type: object
@@ -2184,10 +2387,7 @@ components:
                     description: custom_profile is the custom profile.
                 weekStartDayOffset:
                     type: integer
-                    description: |-
-                        week_start_day_offset is the week start day offset from Sunday.
-                         0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
-                         Default is Sunday.
+                    description: "week_start_day_offset is the week start day offset from Sunday.\r\n 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday\r\n Default is Sunday."
                     format: int32
                 disallowChangeUsername:
                     type: boolean
@@ -2232,9 +2432,7 @@ components:
                     format: enum
                 filepathTemplate:
                     type: string
-                    description: |-
-                        The template of file path.
-                         e.g. assets/{timestamp}_{filename}
+                    description: "The template of file path.\r\n e.g. assets/{timestamp}_{filename}"
                 uploadSizeLimitMb:
                     type: string
                     description: The max upload size in megabytes.
@@ -2243,6 +2441,19 @@ components:
                         - $ref: '#/components/schemas/StorageSetting_S3Config'
                     description: The S3 config.
             description: Storage configuration settings for instance attachments.
+        InstanceSetting_WebPushSetting:
+            type: object
+            properties:
+                enabled:
+                    type: boolean
+                    description: Whether web push notifications are enabled.
+                vapidPrivateKey:
+                    type: string
+                    description: "The VAPID private key (base64 encoded).\r\n This should be kept secret and only visible to admins."
+                vapidPublicKey:
+                    type: string
+                    description: "The VAPID public key (base64 encoded).\r\n This is shared with clients for subscription."
+            description: Web push notification settings.
         ListActivitiesResponse:
             type: object
             properties:
@@ -2253,10 +2464,7 @@ components:
                     description: The activities.
                 nextPageToken:
                     type: string
-                    description: |-
-                        A token to retrieve the next page of results.
-                         Pass this value in the page_token field in the subsequent call to `ListActivities`
-                         method to retrieve the next page of results.
+                    description: "A token to retrieve the next page of results.\r\n Pass this value in the page_token field in the subsequent call to `ListActivities`\r\n method to retrieve the next page of results."
         ListAllUserStatsResponse:
             type: object
             properties:
@@ -2275,9 +2483,7 @@ components:
                     description: The list of attachments.
                 nextPageToken:
                     type: string
-                    description: |-
-                        A token that can be sent as `page_token` to retrieve the next page.
-                         If this field is omitted, there are no subsequent pages.
+                    description: "A token that can be sent as `page_token` to retrieve the next page.\r\n If this field is omitted, there are no subsequent pages."
                 totalSize:
                     type: integer
                     description: The total count of attachments (may be approximate).
@@ -2352,9 +2558,7 @@ components:
                     description: The list of memos.
                 nextPageToken:
                     type: string
-                    description: |-
-                        A token that can be sent as `page_token` to retrieve the next page.
-                         If this field is omitted, there are no subsequent pages.
+                    description: "A token that can be sent as `page_token` to retrieve the next page.\r\n If this field is omitted, there are no subsequent pages."
         ListPersonalAccessTokensResponse:
             type: object
             properties:
@@ -2370,6 +2574,17 @@ components:
                     type: integer
                     description: The total count of personal access tokens.
                     format: int32
+        ListRemindersResponse:
+            type: object
+            properties:
+                reminders:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Reminder'
+                    description: The list of reminders.
+                nextPageToken:
+                    type: string
+                    description: A token for the next page of results.
         ListShortcutsResponse:
             type: object
             properties:
@@ -2387,6 +2602,13 @@ components:
                         $ref: '#/components/schemas/UserNotification'
                 nextPageToken:
                     type: string
+        ListUserPushSubscriptionsResponse:
+            type: object
+            properties:
+                subscriptions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/PushSubscription'
         ListUserSettingsResponse:
             type: object
             properties:
@@ -2397,9 +2619,7 @@ components:
                     description: The list of user settings.
                 nextPageToken:
                     type: string
-                    description: |-
-                        A token that can be sent as `page_token` to retrieve the next page.
-                         If this field is omitted, there are no subsequent pages.
+                    description: "A token that can be sent as `page_token` to retrieve the next page.\r\n If this field is omitted, there are no subsequent pages."
                 totalSize:
                     type: integer
                     description: The total count of settings (may be approximate).
@@ -2423,9 +2643,7 @@ components:
                     description: The list of users.
                 nextPageToken:
                     type: string
-                    description: |-
-                        A token that can be sent as `page_token` to retrieve the next page.
-                         If this field is omitted, there are no subsequent pages.
+                    description: "A token that can be sent as `page_token` to retrieve the next page.\r\n If this field is omitted, there are no subsequent pages."
                 totalSize:
                     type: integer
                     description: The total count of users (may be approximate).
@@ -2453,9 +2671,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        The resource name of the memo.
-                         Format: memos/{memo}, memo is the user defined id or uuid.
+                    description: "The resource name of the memo.\r\n Format: memos/{memo}, memo is the user defined id or uuid."
                 state:
                     enum:
                         - STATE_UNSPECIFIED
@@ -2467,20 +2683,14 @@ components:
                 creator:
                     readOnly: true
                     type: string
-                    description: |-
-                        The name of the creator.
-                         Format: users/{user}
+                    description: "The name of the creator.\r\n Format: users/{user}"
                 createTime:
                     type: string
-                    description: |-
-                        The creation timestamp.
-                         If not set on creation, the server will set it to the current time.
+                    description: "The creation timestamp.\r\n If not set on creation, the server will set it to the current time."
                     format: date-time
                 updateTime:
                     type: string
-                    description: |-
-                        The last update timestamp.
-                         If not set on creation, the server will set it to the current time.
+                    description: "The last update timestamp.\r\n If not set on creation, the server will set it to the current time."
                     format: date-time
                 displayTime:
                     type: string
@@ -2531,9 +2741,7 @@ components:
                 parent:
                     readOnly: true
                     type: string
-                    description: |-
-                        Output only. The name of the parent memo.
-                         Format: memos/{memo}
+                    description: "Output only. The name of the parent memo.\r\n Format: memos/{memo}"
                 snippet:
                     readOnly: true
                     type: string
@@ -2571,9 +2779,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        The resource name of the memo.
-                         Format: memos/{memo}
+                    description: "The resource name of the memo.\r\n Format: memos/{memo}"
                 snippet:
                     readOnly: true
                     type: string
@@ -2615,9 +2821,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        The resource name of the personal access token.
-                         Format: users/{user}/personalAccessTokens/{personal_access_token}
+                    description: "The resource name of the personal access token.\r\n Format: users/{user}/personalAccessTokens/{personal_access_token}"
                 description:
                     type: string
                     description: The description of the token.
@@ -2635,9 +2839,36 @@ components:
                     type: string
                     description: Output only. The last used timestamp.
                     format: date-time
-            description: |-
-                PersonalAccessToken represents a long-lived token for API/script access.
-                 PATs are distinct from short-lived JWT access tokens used for session authentication.
+            description: "PersonalAccessToken represents a long-lived token for API/script access.\r\n PATs are distinct from short-lived JWT access tokens used for session authentication."
+        PushSubscription:
+            required:
+                - endpoint
+                - p256dh
+                - auth
+            type: object
+            properties:
+                name:
+                    readOnly: true
+                    type: string
+                    description: "The resource name of the push subscription.\r\n Format: users/{user}/pushSubscriptions/{push_subscription}"
+                endpoint:
+                    type: string
+                    description: The push endpoint URL.
+                p256dh:
+                    type: string
+                    description: The p256dh key for encryption.
+                auth:
+                    type: string
+                    description: The auth secret for encryption.
+                userAgent:
+                    type: string
+                    description: Optional. The user agent of the device.
+                createTime:
+                    readOnly: true
+                    type: string
+                    description: The creation timestamp.
+                    format: date-time
+            description: PushSubscription represents a web push subscription for a user device.
         Reaction:
             required:
                 - contentId
@@ -2647,21 +2878,14 @@ components:
                 name:
                     readOnly: true
                     type: string
-                    description: |-
-                        The resource name of the reaction.
-                         Format: memos/{memo}/reactions/{reaction}
+                    description: "The resource name of the reaction.\r\n Format: memos/{memo}/reactions/{reaction}"
                 creator:
                     readOnly: true
                     type: string
-                    description: |-
-                        The resource name of the creator.
-                         Format: users/{user}
+                    description: "The resource name of the creator.\r\n Format: users/{user}"
                 contentId:
                     type: string
-                    description: |-
-                        The resource name of the content.
-                         For memo reactions, this should be the memo's resource name.
-                         Format: memos/{memo}
+                    description: "The resource name of the content.\r\n For memo reactions, this should be the memo's resource name.\r\n Format: memos/{memo}"
                 reactionType:
                     type: string
                     description: "Required. The type of reaction (e.g., \"\U0001F44D\", \"❤️\", \"\U0001F604\")."
@@ -2683,6 +2907,47 @@ components:
                     type: string
                     description: When the access token expires.
                     format: date-time
+        Reminder:
+            required:
+                - memo
+                - remindAt
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: "The resource name of the reminder.\r\n Format: reminders/{reminder}"
+                memo:
+                    type: string
+                    description: "The memo this reminder is for.\r\n Format: memos/{memo}"
+                creator:
+                    readOnly: true
+                    type: string
+                    description: "The creator of the reminder.\r\n Format: users/{user}"
+                remindAt:
+                    type: string
+                    description: When the reminder should trigger.
+                    format: date-time
+                status:
+                    readOnly: true
+                    enum:
+                        - STATUS_UNSPECIFIED
+                        - PENDING
+                        - TRIGGERED
+                        - DISMISSED
+                    type: string
+                    description: Status of the reminder.
+                    format: enum
+                createTime:
+                    readOnly: true
+                    type: string
+                    description: Creation time.
+                    format: date-time
+                updateTime:
+                    readOnly: true
+                    type: string
+                    description: Last update time.
+                    format: date-time
+            description: Reminder represents a reminder for a memo.
         SetMemoAttachmentsRequest:
             required:
                 - name
@@ -2691,9 +2956,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        Required. The resource name of the memo.
-                         Format: memos/{memo}
+                    description: "Required. The resource name of the memo.\r\n Format: memos/{memo}"
                 attachments:
                     type: array
                     items:
@@ -2707,9 +2970,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        Required. The resource name of the memo.
-                         Format: memos/{memo}
+                    description: "Required. The resource name of the memo.\r\n Format: memos/{memo}"
                 relations:
                     type: array
                     items:
@@ -2722,9 +2983,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        The resource name of the shortcut.
-                         Format: users/{user}/shortcuts/{shortcut}
+                    description: "The resource name of the shortcut.\r\n Format: users/{user}/shortcuts/{shortcut}"
                 title:
                     type: string
                     description: The title of the shortcut.
@@ -2774,9 +3033,7 @@ components:
                     description: The redirect URI used in the SSO flow.
                 codeVerifier:
                     type: string
-                    description: |-
-                        The PKCE code verifier for enhanced security (RFC 7636).
-                         Optional - enables PKCE flow protection against authorization code interception.
+                    description: "The PKCE code verifier for enhanced security (RFC 7636).\r\n Optional - enables PKCE flow protection against authorization code interception."
             description: Nested message for SSO authentication credentials.
         SignInResponse:
             type: object
@@ -2787,14 +3044,10 @@ components:
                     description: The authenticated user's information.
                 accessToken:
                     type: string
-                    description: |-
-                        The short-lived access token for API requests.
-                         Store in memory only, not in localStorage.
+                    description: "The short-lived access token for API requests.\r\n Store in memory only, not in localStorage."
                 accessTokenExpiresAt:
                     type: string
-                    description: |-
-                        When the access token expires.
-                         Client should call RefreshToken before this time.
+                    description: "When the access token expires.\r\n Client should call RefreshToken before this time."
                     format: date-time
         Status:
             type: object
@@ -2827,9 +3080,7 @@ components:
                     type: string
                 usePathStyle:
                     type: boolean
-            description: |-
-                S3 configuration for cloud storage backend.
-                 Reference: https://developers.cloudflare.com/r2/examples/aws/aws-sdk-go/
+            description: "S3 configuration for cloud storage backend.\r\n Reference: https://developers.cloudflare.com/r2/examples/aws/aws-sdk-go/"
         UpsertMemoReactionRequest:
             required:
                 - name
@@ -2838,9 +3089,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        Required. The resource name of the memo.
-                         Format: memos/{memo}
+                    description: "Required. The resource name of the memo.\r\n Format: memos/{memo}"
                 reaction:
                     allOf:
                         - $ref: '#/components/schemas/Reaction'
@@ -2854,9 +3103,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        The resource name of the user.
-                         Format: users/{user}
+                    description: "The resource name of the user.\r\n Format: users/{user}"
                 role:
                     enum:
                         - ROLE_UNSPECIFIED
@@ -2908,15 +3155,11 @@ components:
                 name:
                     readOnly: true
                     type: string
-                    description: |-
-                        The resource name of the notification.
-                         Format: users/{user}/notifications/{notification}
+                    description: "The resource name of the notification.\r\n Format: users/{user}/notifications/{notification}"
                 sender:
                     readOnly: true
                     type: string
-                    description: |-
-                        The sender of the notification.
-                         Format: users/{user}
+                    description: "The sender of the notification.\r\n Format: users/{user}"
                 status:
                     enum:
                         - STATUS_UNSPECIFIED
@@ -2935,22 +3178,23 @@ components:
                     enum:
                         - TYPE_UNSPECIFIED
                         - MEMO_COMMENT
+                        - REMINDER
                     type: string
                     description: The type of the notification.
                     format: enum
                 activityId:
                     type: integer
-                    description: The activity ID associated with this notification.
+                    description: The activity ID associated with this notification (for MEMO_COMMENT type).
                     format: int32
+                reminderUid:
+                    type: string
+                    description: The reminder UID associated with this notification (for REMINDER type).
         UserSetting:
             type: object
             properties:
                 name:
                     type: string
-                    description: |-
-                        The name of the user setting.
-                         Format: users/{user}/settings/{setting}, {setting} is the key for the setting.
-                         For example, "users/123/settings/GENERAL" for general settings.
+                    description: "The name of the user setting.\r\n Format: users/{user}/settings/{setting}, {setting} is the key for the setting.\r\n For example, \"users/123/settings/GENERAL\" for general settings."
                 generalSetting:
                     $ref: '#/components/schemas/UserSetting_GeneralSetting'
                 webhooksSetting:
@@ -2967,10 +3211,7 @@ components:
                     description: The default visibility of the memo.
                 theme:
                     type: string
-                    description: |-
-                        The preferred theme of the user.
-                         This references a CSS file in the web/public/themes/ directory.
-                         If not set, the default theme will be used.
+                    description: "The preferred theme of the user.\r\n This references a CSS file in the web/public/themes/ directory.\r\n If not set, the default theme will be used."
             description: General user settings configuration.
         UserSetting_WebhooksSetting:
             type: object
@@ -2986,9 +3227,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        The resource name of the user whose stats these are.
-                         Format: users/{user}
+                    description: "The resource name of the user whose stats these are.\r\n Format: users/{user}"
                 memoDisplayTimestamps:
                     type: array
                     items:
@@ -3036,9 +3275,7 @@ components:
             properties:
                 name:
                     type: string
-                    description: |-
-                        The name of the webhook.
-                         Format: users/{user}/webhooks/{webhook}
+                    description: "The name of the webhook.\r\n Format: users/{user}/webhooks/{webhook}"
                 url:
                     type: string
                     description: The URL to send the webhook to.
@@ -3063,5 +3300,6 @@ tags:
     - name: IdentityProviderService
     - name: InstanceService
     - name: MemoService
+    - name: ReminderService
     - name: ShortcutService
     - name: UserService

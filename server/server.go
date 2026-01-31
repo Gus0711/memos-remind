@@ -9,17 +9,20 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/SherClockHolmes/webpush-go"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/pkg/errors"
 
 	"github.com/usememos/memos/internal/profile"
+	"github.com/usememos/memos/plugin/notification"
 	storepb "github.com/usememos/memos/proto/gen/store"
 	apiv1 "github.com/usememos/memos/server/router/api/v1"
 	"github.com/usememos/memos/server/router/fileserver"
 	"github.com/usememos/memos/server/router/frontend"
 	"github.com/usememos/memos/server/router/rss"
+	reminderrunner "github.com/usememos/memos/server/runner/reminder"
 	"github.com/usememos/memos/server/runner/s3presign"
 	"github.com/usememos/memos/store"
 )
@@ -29,14 +32,23 @@ type Server struct {
 	Profile *profile.Profile
 	Store   *store.Store
 
-	echoServer        *echo.Echo
-	runnerCancelFuncs []context.CancelFunc
+	echoServer          *echo.Echo
+	notificationService *notification.Service
+	runnerCancelFuncs   []context.CancelFunc
 }
 
 func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store) (*Server, error) {
+	fmt.Println("=== NewServer: Starting server initialization ===")
+
+	// Initialize notification service with providers
+	notificationService := notification.NewService()
+	notificationService.RegisterProvider(notification.NewInboxProvider(store))
+	notificationService.RegisterProvider(notification.NewWebPushProvider(store))
+
 	s := &Server{
-		Store:   store,
-		Profile: profile,
+		Store:               store,
+		Profile:             profile,
+		notificationService: notificationService,
 	}
 
 	echoServer := echo.New()
@@ -49,6 +61,14 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 	instanceBasicSetting, err := s.getOrUpsertInstanceBasicSetting(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get instance basic setting")
+	}
+
+	// Initialize VAPID keys for web push notifications
+	fmt.Println("=== NewServer: About to initialize web push setting ===")
+	if err := s.initializeWebPushSetting(ctx); err != nil {
+		fmt.Printf("=== NewServer: FAILED to initialize web push setting: %v ===\n", err)
+	} else {
+		fmt.Println("=== NewServer: Web push setting initialization COMPLETED ===")
 	}
 
 	secret := "usememos"
@@ -140,9 +160,10 @@ func (s *Server) StartBackgroundRunners(ctx context.Context) {
 	// Create a separate context for each background runner
 	// This allows us to control cancellation for each runner independently
 	s3Context, s3Cancel := context.WithCancel(ctx)
+	reminderContext, reminderCancel := context.WithCancel(ctx)
 
-	// Store the cancel function so we can properly shut down runners
-	s.runnerCancelFuncs = append(s.runnerCancelFuncs, s3Cancel)
+	// Store the cancel functions so we can properly shut down runners
+	s.runnerCancelFuncs = append(s.runnerCancelFuncs, s3Cancel, reminderCancel)
 
 	// Create and start S3 presign runner
 	s3presignRunner := s3presign.NewRunner(s.Store)
@@ -152,6 +173,14 @@ func (s *Server) StartBackgroundRunners(ctx context.Context) {
 	go func() {
 		s3presignRunner.Run(s3Context)
 		slog.Info("s3presign runner stopped")
+	}()
+
+	// Create and start reminder runner
+	// Checks for due reminders every minute
+	reminderRunner := reminderrunner.NewRunner(s.Store, s.notificationService)
+	go func() {
+		reminderRunner.Run(reminderContext, time.Minute)
+		slog.Info("reminder runner stopped")
 	}()
 
 	// Log the number of goroutines running
@@ -179,4 +208,50 @@ func (s *Server) getOrUpsertInstanceBasicSetting(ctx context.Context) (*storepb.
 		instanceBasicSetting = instanceSetting.GetBasicSetting()
 	}
 	return instanceBasicSetting, nil
+}
+
+// initializeWebPushSetting generates VAPID keys if they don't exist.
+func (s *Server) initializeWebPushSetting(ctx context.Context) error {
+	fmt.Println(">>> initializeWebPushSetting: STARTING")
+	webPushSetting, err := s.Store.GetInstanceWebPushSetting(ctx)
+	if err != nil {
+		fmt.Printf(">>> initializeWebPushSetting: FAILED to get setting: %v\n", err)
+		return errors.Wrap(err, "failed to get web push setting")
+	}
+	fmt.Printf(">>> initializeWebPushSetting: got setting - privateKeyLen=%d, publicKeyLen=%d, enabled=%v\n",
+		len(webPushSetting.VapidPrivateKey), len(webPushSetting.VapidPublicKey), webPushSetting.Enabled)
+
+	// If VAPID keys already exist, no need to generate
+	if webPushSetting.VapidPrivateKey != "" && webPushSetting.VapidPublicKey != "" {
+		fmt.Println(">>> initializeWebPushSetting: VAPID keys already exist, skipping generation")
+		return nil
+	}
+
+	fmt.Println(">>> initializeWebPushSetting: Generating new VAPID keys...")
+	// Generate new VAPID keys
+	privateKey, publicKey, err := webpush.GenerateVAPIDKeys()
+	if err != nil {
+		fmt.Printf(">>> initializeWebPushSetting: FAILED to generate keys: %v\n", err)
+		return errors.Wrap(err, "failed to generate VAPID keys")
+	}
+	fmt.Printf(">>> initializeWebPushSetting: Generated keys - privateKeyLen=%d, publicKeyLen=%d\n",
+		len(privateKey), len(publicKey))
+
+	// Save the new keys (enabled by default)
+	webPushSetting.VapidPrivateKey = privateKey
+	webPushSetting.VapidPublicKey = publicKey
+	webPushSetting.Enabled = true
+
+	fmt.Println(">>> initializeWebPushSetting: Saving to store...")
+	_, err = s.Store.UpsertInstanceSetting(ctx, &storepb.InstanceSetting{
+		Key:   storepb.InstanceSettingKey_WEB_PUSH,
+		Value: &storepb.InstanceSetting_WebPushSetting{WebPushSetting: webPushSetting},
+	})
+	if err != nil {
+		fmt.Printf(">>> initializeWebPushSetting: FAILED to save: %v\n", err)
+		return errors.Wrap(err, "failed to save web push setting")
+	}
+
+	fmt.Println(">>> initializeWebPushSetting: SUCCESS - VAPID keys are now configured!")
+	return nil
 }

@@ -8,6 +8,7 @@ import { AuthService } from "./types/proto/api/v1/auth_service_pb";
 import { IdentityProviderService } from "./types/proto/api/v1/idp_service_pb";
 import { InstanceService } from "./types/proto/api/v1/instance_service_pb";
 import { MemoService } from "./types/proto/api/v1/memo_service_pb";
+import { ReminderService } from "./types/proto/api/v1/reminder_service_pb";
 import { ShortcutService } from "./types/proto/api/v1/shortcut_service_pb";
 import { UserService } from "./types/proto/api/v1/user_service_pb";
 import { redirectOnAuthFailure } from "./utils/auth-redirect";
@@ -145,3 +146,4 @@ export const activityServiceClient = createClient(ActivityService, transport);
 
 // Configuration service clients
 export const identityProviderServiceClient = createClient(IdentityProviderService, transport);
+export const reminderServiceClient = createClient(ReminderService, transport);

@@ -14,6 +14,8 @@ enum InstanceSettingKey {
   STORAGE = 3;
   // MEMO_RELATED is the key for memo related settings.
   MEMO_RELATED = 4;
+  // WEB_PUSH is the key for web push notification settings.
+  WEB_PUSH = 5;
 }
 
 message InstanceSetting {
@@ -23,6 +25,7 @@ message InstanceSetting {
     InstanceGeneralSetting general_setting = 3;
     InstanceStorageSetting storage_setting = 4;
     InstanceMemoRelatedSetting memo_related_setting = 5;
+    InstanceWebPushSetting web_push_setting = 6;
   }
 }
 
@@ -102,4 +105,13 @@ message InstanceMemoRelatedSetting {
   bool enable_double_click_edit = 4;
   // reactions is the list of reactions.
   repeated string reactions = 7;
+}
+
+message InstanceWebPushSetting {
+  // Whether web push notifications are enabled.
+  bool enabled = 1;
+  // The VAPID private key (base64 URL-safe encoded).
+  string vapid_private_key = 2;
+  // The VAPID public key (base64 URL-safe encoded).
+  string vapid_public_key = 3;
 }

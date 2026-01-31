@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package memos.api.v1;
+
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "gen/api/v1";
+
+service ReminderService {
+  // CreateReminder creates a new reminder for a memo.
+  rpc CreateReminder(CreateReminderRequest) returns (Reminder) {
+    option (google.api.http) = {
+      post: "/api/v1/reminders"
+      body: "*"
+    };
+  }
+
+  // ListReminders returns a list of reminders for the current user.
+  rpc ListReminders(ListRemindersRequest) returns (ListRemindersResponse) {
+    option (google.api.http) = {get: "/api/v1/reminders"};
+  }
+
+  // GetReminder gets a reminder by name.
+  rpc GetReminder(GetReminderRequest) returns (Reminder) {
+    option (google.api.http) = {get: "/api/v1/{name=reminders/*}"};
+    option (google.api.method_signature) = "name";
+  }
+
+  // UpdateReminder updates a reminder.
+  rpc UpdateReminder(UpdateReminderRequest) returns (Reminder) {
+    option (google.api.http) = {
+      patch: "/api/v1/{reminder.name=reminders/*}"
+      body: "reminder"
+    };
+    option (google.api.method_signature) = "reminder,update_mask";
+  }
+
+  // DeleteReminder deletes a reminder.
+  rpc DeleteReminder(DeleteReminderRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/{name=reminders/*}"};
+    option (google.api.method_signature) = "name";
+  }
+
+  // DismissReminder marks a reminder as dismissed.
+  rpc DismissReminder(DismissReminderRequest) returns (Reminder) {
+    option (google.api.http) = {
+      post: "/api/v1/{name=reminders/*}:dismiss"
+    };
+    option (google.api.method_signature) = "name";
+  }
+}
+
+// Reminder represents a reminder for a memo.
+message Reminder {
+  option (google.api.resource) = {
+    type: "memos.api.v1/Reminder"
+    pattern: "reminders/{reminder}"
+    singular: "reminder"
+    plural: "reminders"
+  };
+
+  // The resource name of the reminder.
+  // Format: reminders/{reminder}
+  string name = 1 [(google.api.field_behavior) = IDENTIFIER];
+
+  // The memo this reminder is for.
+  // Format: memos/{memo}
+  string memo = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // The creator of the reminder.
+  // Format: users/{user}
+  string creator = 3 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // When the reminder should trigger.
+  google.protobuf.Timestamp remind_at = 4 [(google.api.field_behavior) = REQUIRED];
+
+  // Status of the reminder.
+  Status status = 5 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // Creation time.
+  google.protobuf.Timestamp create_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // Last update time.
+  google.protobuf.Timestamp update_time = 7 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // Status enum for reminders.
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    PENDING = 1;
+    TRIGGERED = 2;
+    DISMISSED = 3;
+  }
+}
+
+message CreateReminderRequest {
+  // Required. The memo to create a reminder for.
+  // Format: memos/{memo}
+  string memo = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // Required. When the reminder should trigger.
+  google.protobuf.Timestamp remind_at = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ListRemindersRequest {
+  // Optional. Filter by memo.
+  // Format: memos/{memo}
+  string memo = 1 [(google.api.field_behavior) = OPTIONAL];
+
+  // Optional. Filter by status.
+  Reminder.Status status = 2 [(google.api.field_behavior) = OPTIONAL];
+
+  // Optional. The maximum number of reminders to return.
+  int32 page_size = 3 [(google.api.field_behavior) = OPTIONAL];
+
+  // Optional. A page token from a previous ListReminders call.
+  string page_token = 4 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message ListRemindersResponse {
+  // The list of reminders.
+  repeated Reminder reminders = 1;
+
+  // A token for the next page of results.
+  string next_page_token = 2;
+}
+
+message GetReminderRequest {
+  // Required. The resource name of the reminder to retrieve.
+  // Format: reminders/{reminder}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Reminder"}
+  ];
+}
+
+message UpdateReminderRequest {
+  // Required. The reminder to update.
+  Reminder reminder = 1 [(google.api.field_behavior) = REQUIRED];
+
+  // Optional. The list of fields to update.
+  google.protobuf.FieldMask update_mask = 2 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message DeleteReminderRequest {
+  // Required. The resource name of the reminder to delete.
+  // Format: reminders/{reminder}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Reminder"}
+  ];
+}
+
+message DismissReminderRequest {
+  // Required. The resource name of the reminder to dismiss.
+  // Format: reminders/{reminder}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/Reminder"}
+  ];
+}

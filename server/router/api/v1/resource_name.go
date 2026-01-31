@@ -19,6 +19,7 @@ const (
 	IdentityProviderNamePrefix = "identity-providers/"
 	ActivityNamePrefix         = "activities/"
 	WebhookNamePrefix          = "webhooks/"
+	ReminderNamePrefix         = "reminders/"
 )
 
 // GetNameParentTokens returns the tokens from a resource name.
@@ -155,4 +156,14 @@ func ExtractActivityIDFromName(name string) (int32, error) {
 		return 0, errors.Errorf("invalid activity ID %q", tokens[0])
 	}
 	return id, nil
+}
+
+// ExtractReminderUIDFromName returns the reminder UID from a resource name.
+// e.g., "reminders/uuid" -> "uuid".
+func ExtractReminderUIDFromName(name string) (string, error) {
+	tokens, err := GetNameParentTokens(name, ReminderNamePrefix)
+	if err != nil {
+		return "", err
+	}
+	return tokens[0], nil
 }

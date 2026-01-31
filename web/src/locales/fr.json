@@ -61,7 +61,11 @@
     "mark": "Marquer",
     "memo": "Memo",
     "memos": "Memos",
+    "reminders": "Rappels",
     "more": "Plus",
+    "enable": "Activer",
+    "disable": "Désactiver",
+    "loading": "Chargement...",
     "name": "Nom",
     "new": "Nouveau",
     "nickname": "Surnom",
@@ -212,6 +216,47 @@
     "no-memos-found": "Aucune note trouvée",
     "search-placeholder": "Rechercher du contenu"
   },
+  "reminder": {
+    "title": "Rappels",
+    "add-reminder": "Ajouter un rappel",
+    "edit-reminder": "Modifier le rappel",
+    "no-reminders": "Aucun rappel",
+    "upcoming-reminders": "Rappels à venir",
+    "past-reminders": "Rappels passés",
+    "remind-me": "Me rappeler",
+    "remind-at": "Rappeler à",
+    "status": {
+      "pending": "En attente",
+      "triggered": "Déclenché",
+      "dismissed": "Ignoré"
+    },
+    "shortcuts": {
+      "in-1-hour": "Dans 1 heure",
+      "in-3-hours": "Dans 3 heures",
+      "tonight": "Ce soir",
+      "tomorrow-morning": "Demain matin",
+      "tomorrow-evening": "Demain soir",
+      "in-1-week": "Dans 1 semaine",
+      "custom": "Date/heure personnalisée"
+    },
+    "actions": {
+      "delete": "Supprimer le rappel",
+      "dismiss": "Ignorer",
+      "snooze": "Reporter"
+    },
+    "messages": {
+      "created": "Rappel créé",
+      "updated": "Rappel mis à jour",
+      "deleted": "Rappel supprimé",
+      "dismissed": "Rappel ignoré",
+      "delete-confirm": "Êtes-vous sûr de vouloir supprimer ce rappel ?",
+      "must-be-future": "L'heure du rappel doit être dans le futur"
+    },
+    "notification": {
+      "title": "Rappel",
+      "body": "Vous avez un rappel pour cette note"
+    }
+  },
   "resource": {
     "clear": "Effacer",
     "copy-link": "Copier le lien",
@@ -319,6 +364,15 @@
       "default-memo-sort-option": "Heure d'affichage de la note",
       "default-memo-visibility": "Visibilité par défaut de la note",
       "theme": "Thème"
+    },
+    "push-notifications": {
+      "title": "Notifications Push",
+      "description": "Recevez des notifications navigateur pour vos rappels même lorsque l'onglet est fermé",
+      "tooltip": "Activez les notifications push pour recevoir des alertes pour vos rappels de notes",
+      "enabled": "Activées",
+      "disabled": "Désactivées",
+      "permission-denied": "Permission refusée",
+      "not-configured": "Non configuré par l'admin"
     },
     "shortcut": {
       "delete-confirm": "Êtes-vous sûr de vouloir supprimer le raccourci `{{title}}` ?",
@@ -462,6 +516,7 @@
   "tooltip": {
     "link-memo": "Lier une note",
     "markdown-menu": "Markdown",
+    "reminder": "Définir un rappel",
     "select-location": "Localisation",
     "select-visibility": "Visibilité",
     "tags": "Tags",

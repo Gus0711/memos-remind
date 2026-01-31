@@ -39,6 +39,14 @@ func (s *ConnectServiceHandler) UpdateInstanceSetting(ctx context.Context, req *
 	return connect.NewResponse(resp), nil
 }
 
+func (s *ConnectServiceHandler) GetVAPIDPublicKey(ctx context.Context, req *connect.Request[v1pb.GetVAPIDPublicKeyRequest]) (*connect.Response[v1pb.GetVAPIDPublicKeyResponse], error) {
+	resp, err := s.APIV1Service.GetVAPIDPublicKey(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
 // AuthService
 //
 // Auth service methods need special handling for response headers (cookies).
@@ -225,6 +233,30 @@ func (s *ConnectServiceHandler) UpdateUserNotification(ctx context.Context, req 
 
 func (s *ConnectServiceHandler) DeleteUserNotification(ctx context.Context, req *connect.Request[v1pb.DeleteUserNotificationRequest]) (*connect.Response[emptypb.Empty], error) {
 	resp, err := s.APIV1Service.DeleteUserNotification(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) ListUserPushSubscriptions(ctx context.Context, req *connect.Request[v1pb.ListUserPushSubscriptionsRequest]) (*connect.Response[v1pb.ListUserPushSubscriptionsResponse], error) {
+	resp, err := s.APIV1Service.ListUserPushSubscriptions(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) CreateUserPushSubscription(ctx context.Context, req *connect.Request[v1pb.CreateUserPushSubscriptionRequest]) (*connect.Response[v1pb.PushSubscription], error) {
+	resp, err := s.APIV1Service.CreateUserPushSubscription(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) DeleteUserPushSubscription(ctx context.Context, req *connect.Request[v1pb.DeleteUserPushSubscriptionRequest]) (*connect.Response[emptypb.Empty], error) {
+	resp, err := s.APIV1Service.DeleteUserPushSubscription(ctx, req.Msg)
 	if err != nil {
 		return nil, convertGRPCError(err)
 	}
@@ -483,6 +515,56 @@ func (s *ConnectServiceHandler) UpdateIdentityProvider(ctx context.Context, req 
 
 func (s *ConnectServiceHandler) DeleteIdentityProvider(ctx context.Context, req *connect.Request[v1pb.DeleteIdentityProviderRequest]) (*connect.Response[emptypb.Empty], error) {
 	resp, err := s.APIV1Service.DeleteIdentityProvider(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+// ReminderService
+
+func (s *ConnectServiceHandler) CreateReminder(ctx context.Context, req *connect.Request[v1pb.CreateReminderRequest]) (*connect.Response[v1pb.Reminder], error) {
+	resp, err := s.APIV1Service.CreateReminder(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) ListReminders(ctx context.Context, req *connect.Request[v1pb.ListRemindersRequest]) (*connect.Response[v1pb.ListRemindersResponse], error) {
+	resp, err := s.APIV1Service.ListReminders(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) GetReminder(ctx context.Context, req *connect.Request[v1pb.GetReminderRequest]) (*connect.Response[v1pb.Reminder], error) {
+	resp, err := s.APIV1Service.GetReminder(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) UpdateReminder(ctx context.Context, req *connect.Request[v1pb.UpdateReminderRequest]) (*connect.Response[v1pb.Reminder], error) {
+	resp, err := s.APIV1Service.UpdateReminder(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) DeleteReminder(ctx context.Context, req *connect.Request[v1pb.DeleteReminderRequest]) (*connect.Response[emptypb.Empty], error) {
+	resp, err := s.APIV1Service.DeleteReminder(ctx, req.Msg)
+	if err != nil {
+		return nil, convertGRPCError(err)
+	}
+	return connect.NewResponse(resp), nil
+}
+
+func (s *ConnectServiceHandler) DismissReminder(ctx context.Context, req *connect.Request[v1pb.DismissReminderRequest]) (*connect.Response[v1pb.Reminder], error) {
+	resp, err := s.APIV1Service.DismissReminder(ctx, req.Msg)
 	if err != nil {
 		return nil, convertGRPCError(err)
 	}

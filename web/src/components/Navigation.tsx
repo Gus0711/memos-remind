@@ -1,10 +1,12 @@
-import { BellIcon, EarthIcon, LibraryIcon, PaperclipIcon, UserCircleIcon } from "lucide-react";
+import { BellIcon, ClockIcon, EarthIcon, LibraryIcon, PaperclipIcon, UserCircleIcon } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import { useReminders } from "@/hooks/useReminderQueries";
 import { useNotifications } from "@/hooks/useUserQueries";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/router";
+import { Reminder_Status } from "@/types/proto/api/v1/reminder_service_pb";
 import { UserNotification_Status } from "@/types/proto/api/v1/user_service_pb";
 import { useTranslate } from "@/utils/i18n";
 import MemosLogo from "./MemosLogo";
@@ -27,6 +29,7 @@ const Navigation = (props: Props) => {
   const t = useTranslate();
   const currentUser = useCurrentUser();
   const { data: notifications = [] } = useNotifications();
+  const { data: reminders = [] } = useReminders();
 
   const homeNavLink: NavLinkItem = {
     id: "header-memos",
@@ -45,6 +48,22 @@ const Navigation = (props: Props) => {
     path: Routes.ATTACHMENTS,
     title: t("common.attachments"),
     icon: <PaperclipIcon className="w-6 h-auto shrink-0" />,
+  };
+  const pendingRemindersCount = reminders.filter((r) => r.status === Reminder_Status.PENDING).length;
+  const remindersNavLink: NavLinkItem = {
+    id: "header-reminders",
+    path: Routes.REMINDERS,
+    title: t("common.reminders"),
+    icon: (
+      <div className="relative">
+        <ClockIcon className="w-6 h-auto shrink-0" />
+        {pendingRemindersCount > 0 && (
+          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-primary text-primary-foreground text-[10px] font-semibold rounded-full border-2 border-background">
+            {pendingRemindersCount > 99 ? "99+" : pendingRemindersCount}
+          </span>
+        )}
+      </div>
+    ),
   };
   const unreadCount = notifications.filter((n) => n.status === UserNotification_Status.UNREAD).length;
   const inboxNavLink: NavLinkItem = {
@@ -70,7 +89,7 @@ const Navigation = (props: Props) => {
   };
 
   const navLinks: NavLinkItem[] = currentUser
-    ? [homeNavLink, exploreNavLink, attachmentsNavLink, inboxNavLink]
+    ? [homeNavLink, exploreNavLink, attachmentsNavLink, remindersNavLink, inboxNavLink]
     : [exploreNavLink, signInNavLink];
 
   return (

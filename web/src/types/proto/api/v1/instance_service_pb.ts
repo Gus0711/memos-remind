@@ -18,7 +18,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file api/v1/instance_service.proto.
  */
 export const file_api_v1_instance_service: GenFile = /*@__PURE__*/
-  fileDesc("Ch1hcGkvdjEvaW5zdGFuY2Vfc2VydmljZS5wcm90bxIMbWVtb3MuYXBpLnYxImkKD0luc3RhbmNlUHJvZmlsZRIPCgd2ZXJzaW9uGAIgASgJEgwKBGRlbW8YAyABKAgSFAoMaW5zdGFuY2VfdXJsGAYgASgJEiEKBWFkbWluGAcgASgLMhIubWVtb3MuYXBpLnYxLlVzZXIiGwoZR2V0SW5zdGFuY2VQcm9maWxlUmVxdWVzdCKzCwoPSW5zdGFuY2VTZXR0aW5nEhEKBG5hbWUYASABKAlCA+BBCBJHCg9nZW5lcmFsX3NldHRpbmcYAiABKAsyLC5tZW1vcy5hcGkudjEuSW5zdGFuY2VTZXR0aW5nLkdlbmVyYWxTZXR0aW5nSAASRwoPc3RvcmFnZV9zZXR0aW5nGAMgASgLMiwubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZy5TdG9yYWdlU2V0dGluZ0gAElAKFG1lbW9fcmVsYXRlZF9zZXR0aW5nGAQgASgLMjAubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZy5NZW1vUmVsYXRlZFNldHRpbmdIABqHAwoOR2VuZXJhbFNldHRpbmcSIgoaZGlzYWxsb3dfdXNlcl9yZWdpc3RyYXRpb24YAiABKAgSHgoWZGlzYWxsb3dfcGFzc3dvcmRfYXV0aBgDIAEoCBIZChFhZGRpdGlvbmFsX3NjcmlwdBgEIAEoCRIYChBhZGRpdGlvbmFsX3N0eWxlGAUgASgJElIKDmN1c3RvbV9wcm9maWxlGAYgASgLMjoubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZy5HZW5lcmFsU2V0dGluZy5DdXN0b21Qcm9maWxlEh0KFXdlZWtfc3RhcnRfZGF5X29mZnNldBgHIAEoBRIgChhkaXNhbGxvd19jaGFuZ2VfdXNlcm5hbWUYCCABKAgSIAoYZGlzYWxsb3dfY2hhbmdlX25pY2tuYW1lGAkgASgIGkUKDUN1c3RvbVByb2ZpbGUSDQoFdGl0bGUYASABKAkSEwoLZGVzY3JpcHRpb24YAiABKAkSEAoIbG9nb191cmwYAyABKAkaugMKDlN0b3JhZ2VTZXR0aW5nEk4KDHN0b3JhZ2VfdHlwZRgBIAEoDjI4Lm1lbW9zLmFwaS52MS5JbnN0YW5jZVNldHRpbmcuU3RvcmFnZVNldHRpbmcuU3RvcmFnZVR5cGUSGQoRZmlsZXBhdGhfdGVtcGxhdGUYAiABKAkSHAoUdXBsb2FkX3NpemVfbGltaXRfbWIYAyABKAMSSAoJczNfY29uZmlnGAQgASgLMjUubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZy5TdG9yYWdlU2V0dGluZy5TM0NvbmZpZxqGAQoIUzNDb25maWcSFQoNYWNjZXNzX2tleV9pZBgBIAEoCRIZChFhY2Nlc3Nfa2V5X3NlY3JldBgCIAEoCRIQCghlbmRwb2ludBgDIAEoCRIOCgZyZWdpb24YBCABKAkSDgoGYnVja2V0GAUgASgJEhYKDnVzZV9wYXRoX3N0eWxlGAYgASgIIkwKC1N0b3JhZ2VUeXBlEhwKGFNUT1JBR0VfVFlQRV9VTlNQRUNJRklFRBAAEgwKCERBVEFCQVNFEAESCQoFTE9DQUwQAhIGCgJTMxADGq0BChJNZW1vUmVsYXRlZFNldHRpbmcSIgoaZGlzYWxsb3dfcHVibGljX3Zpc2liaWxpdHkYASABKAgSIAoYZGlzcGxheV93aXRoX3VwZGF0ZV90aW1lGAIgASgIEhwKFGNvbnRlbnRfbGVuZ3RoX2xpbWl0GAMgASgFEiAKGGVuYWJsZV9kb3VibGVfY2xpY2tfZWRpdBgEIAEoCBIRCglyZWFjdGlvbnMYByADKAkiRgoDS2V5EhMKD0tFWV9VTlNQRUNJRklFRBAAEgsKB0dFTkVSQUwQARILCgdTVE9SQUdFEAISEAoMTUVNT19SRUxBVEVEEAM6YepBXgocbWVtb3MuYXBpLnYxL0luc3RhbmNlU2V0dGluZxIbaW5zdGFuY2Uvc2V0dGluZ3Mve3NldHRpbmd9KhBpbnN0YW5jZVNldHRpbmdzMg9pbnN0YW5jZVNldHRpbmdCBwoFdmFsdWUiTwoZR2V0SW5zdGFuY2VTZXR0aW5nUmVxdWVzdBIyCgRuYW1lGAEgASgJQiTgQQL6QR4KHG1lbW9zLmFwaS52MS9JbnN0YW5jZVNldHRpbmciiQEKHFVwZGF0ZUluc3RhbmNlU2V0dGluZ1JlcXVlc3QSMwoHc2V0dGluZxgBIAEoCzIdLm1lbW9zLmFwaS52MS5JbnN0YW5jZVNldHRpbmdCA+BBAhI0Cgt1cGRhdGVfbWFzaxgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5GaWVsZE1hc2tCA+BBATLbAwoPSW5zdGFuY2VTZXJ2aWNlEn4KEkdldEluc3RhbmNlUHJvZmlsZRInLm1lbW9zLmFwaS52MS5HZXRJbnN0YW5jZVByb2ZpbGVSZXF1ZXN0Gh0ubWVtb3MuYXBpLnYxLkluc3RhbmNlUHJvZmlsZSIggtPkkwIaEhgvYXBpL3YxL2luc3RhbmNlL3Byb2ZpbGUSjwEKEkdldEluc3RhbmNlU2V0dGluZxInLm1lbW9zLmFwaS52MS5HZXRJbnN0YW5jZVNldHRpbmdSZXF1ZXN0Gh0ubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZyIx2kEEbmFtZYLT5JMCJBIiL2FwaS92MS97bmFtZT1pbnN0YW5jZS9zZXR0aW5ncy8qfRK1AQoVVXBkYXRlSW5zdGFuY2VTZXR0aW5nEioubWVtb3MuYXBpLnYxLlVwZGF0ZUluc3RhbmNlU2V0dGluZ1JlcXVlc3QaHS5tZW1vcy5hcGkudjEuSW5zdGFuY2VTZXR0aW5nIlHaQRNzZXR0aW5nLHVwZGF0ZV9tYXNrgtPkkwI1OgdzZXR0aW5nMiovYXBpL3YxL3tzZXR0aW5nLm5hbWU9aW5zdGFuY2Uvc2V0dGluZ3MvKn1CrAEKEGNvbS5tZW1vcy5hcGkudjFCFEluc3RhbmNlU2VydmljZVByb3RvUAFaMGdpdGh1Yi5jb20vdXNlbWVtb3MvbWVtb3MvcHJvdG8vZ2VuL2FwaS92MTthcGl2MaICA01BWKoCDE1lbW9zLkFwaS5WMcoCDE1lbW9zXEFwaVxWMeICGE1lbW9zXEFwaVxWMVxHUEJNZXRhZGF0YeoCDk1lbW9zOjpBcGk6OlYxYgZwcm90bzM", [file_api_v1_user_service, file_google_api_annotations, file_google_api_client, file_google_api_field_behavior, file_google_api_resource, file_google_protobuf_field_mask]);
+  fileDesc("Ch1hcGkvdjEvaW5zdGFuY2Vfc2VydmljZS5wcm90bxIMbWVtb3MuYXBpLnYxImkKD0luc3RhbmNlUHJvZmlsZRIPCgd2ZXJzaW9uGAIgASgJEgwKBGRlbW8YAyABKAgSFAoMaW5zdGFuY2VfdXJsGAYgASgJEiEKBWFkbWluGAcgASgLMhIubWVtb3MuYXBpLnYxLlVzZXIiGwoZR2V0SW5zdGFuY2VQcm9maWxlUmVxdWVzdCLjDAoPSW5zdGFuY2VTZXR0aW5nEhEKBG5hbWUYASABKAlCA+BBCBJHCg9nZW5lcmFsX3NldHRpbmcYAiABKAsyLC5tZW1vcy5hcGkudjEuSW5zdGFuY2VTZXR0aW5nLkdlbmVyYWxTZXR0aW5nSAASRwoPc3RvcmFnZV9zZXR0aW5nGAMgASgLMiwubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZy5TdG9yYWdlU2V0dGluZ0gAElAKFG1lbW9fcmVsYXRlZF9zZXR0aW5nGAQgASgLMjAubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZy5NZW1vUmVsYXRlZFNldHRpbmdIABJIChB3ZWJfcHVzaF9zZXR0aW5nGAUgASgLMiwubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZy5XZWJQdXNoU2V0dGluZ0gAGocDCg5HZW5lcmFsU2V0dGluZxIiChpkaXNhbGxvd191c2VyX3JlZ2lzdHJhdGlvbhgCIAEoCBIeChZkaXNhbGxvd19wYXNzd29yZF9hdXRoGAMgASgIEhkKEWFkZGl0aW9uYWxfc2NyaXB0GAQgASgJEhgKEGFkZGl0aW9uYWxfc3R5bGUYBSABKAkSUgoOY3VzdG9tX3Byb2ZpbGUYBiABKAsyOi5tZW1vcy5hcGkudjEuSW5zdGFuY2VTZXR0aW5nLkdlbmVyYWxTZXR0aW5nLkN1c3RvbVByb2ZpbGUSHQoVd2Vla19zdGFydF9kYXlfb2Zmc2V0GAcgASgFEiAKGGRpc2FsbG93X2NoYW5nZV91c2VybmFtZRgIIAEoCBIgChhkaXNhbGxvd19jaGFuZ2Vfbmlja25hbWUYCSABKAgaRQoNQ3VzdG9tUHJvZmlsZRINCgV0aXRsZRgBIAEoCRITCgtkZXNjcmlwdGlvbhgCIAEoCRIQCghsb2dvX3VybBgDIAEoCRq6AwoOU3RvcmFnZVNldHRpbmcSTgoMc3RvcmFnZV90eXBlGAEgASgOMjgubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZy5TdG9yYWdlU2V0dGluZy5TdG9yYWdlVHlwZRIZChFmaWxlcGF0aF90ZW1wbGF0ZRgCIAEoCRIcChR1cGxvYWRfc2l6ZV9saW1pdF9tYhgDIAEoAxJICglzM19jb25maWcYBCABKAsyNS5tZW1vcy5hcGkudjEuSW5zdGFuY2VTZXR0aW5nLlN0b3JhZ2VTZXR0aW5nLlMzQ29uZmlnGoYBCghTM0NvbmZpZxIVCg1hY2Nlc3Nfa2V5X2lkGAEgASgJEhkKEWFjY2Vzc19rZXlfc2VjcmV0GAIgASgJEhAKCGVuZHBvaW50GAMgASgJEg4KBnJlZ2lvbhgEIAEoCRIOCgZidWNrZXQYBSABKAkSFgoOdXNlX3BhdGhfc3R5bGUYBiABKAgiTAoLU3RvcmFnZVR5cGUSHAoYU1RPUkFHRV9UWVBFX1VOU1BFQ0lGSUVEEAASDAoIREFUQUJBU0UQARIJCgVMT0NBTBACEgYKAlMzEAMarQEKEk1lbW9SZWxhdGVkU2V0dGluZxIiChpkaXNhbGxvd19wdWJsaWNfdmlzaWJpbGl0eRgBIAEoCBIgChhkaXNwbGF5X3dpdGhfdXBkYXRlX3RpbWUYAiABKAgSHAoUY29udGVudF9sZW5ndGhfbGltaXQYAyABKAUSIAoYZW5hYmxlX2RvdWJsZV9jbGlja19lZGl0GAQgASgIEhEKCXJlYWN0aW9ucxgHIAMoCRpWCg5XZWJQdXNoU2V0dGluZxIPCgdlbmFibGVkGAEgASgIEhkKEXZhcGlkX3ByaXZhdGVfa2V5GAIgASgJEhgKEHZhcGlkX3B1YmxpY19rZXkYAyABKAkiVAoDS2V5EhMKD0tFWV9VTlNQRUNJRklFRBAAEgsKB0dFTkVSQUwQARILCgdTVE9SQUdFEAISEAoMTUVNT19SRUxBVEVEEAMSDAoIV0VCX1BVU0gQBDph6kFeChxtZW1vcy5hcGkudjEvSW5zdGFuY2VTZXR0aW5nEhtpbnN0YW5jZS9zZXR0aW5ncy97c2V0dGluZ30qEGluc3RhbmNlU2V0dGluZ3MyD2luc3RhbmNlU2V0dGluZ0IHCgV2YWx1ZSIaChhHZXRWQVBJRFB1YmxpY0tleVJlcXVlc3QiLwoZR2V0VkFQSURQdWJsaWNLZXlSZXNwb25zZRISCgpwdWJsaWNfa2V5GAEgASgJIk8KGUdldEluc3RhbmNlU2V0dGluZ1JlcXVlc3QSMgoEbmFtZRgBIAEoCUIk4EEC+kEeChxtZW1vcy5hcGkudjEvSW5zdGFuY2VTZXR0aW5nIokBChxVcGRhdGVJbnN0YW5jZVNldHRpbmdSZXF1ZXN0EjMKB3NldHRpbmcYASABKAsyHS5tZW1vcy5hcGkudjEuSW5zdGFuY2VTZXR0aW5nQgPgQQISNAoLdXBkYXRlX21hc2sYAiABKAsyGi5nb29nbGUucHJvdG9idWYuRmllbGRNYXNrQgPgQQEy6wQKD0luc3RhbmNlU2VydmljZRJ+ChJHZXRJbnN0YW5jZVByb2ZpbGUSJy5tZW1vcy5hcGkudjEuR2V0SW5zdGFuY2VQcm9maWxlUmVxdWVzdBodLm1lbW9zLmFwaS52MS5JbnN0YW5jZVByb2ZpbGUiIILT5JMCGhIYL2FwaS92MS9pbnN0YW5jZS9wcm9maWxlEo8BChJHZXRJbnN0YW5jZVNldHRpbmcSJy5tZW1vcy5hcGkudjEuR2V0SW5zdGFuY2VTZXR0aW5nUmVxdWVzdBodLm1lbW9zLmFwaS52MS5JbnN0YW5jZVNldHRpbmciMdpBBG5hbWWC0+STAiQSIi9hcGkvdjEve25hbWU9aW5zdGFuY2Uvc2V0dGluZ3MvKn0StQEKFVVwZGF0ZUluc3RhbmNlU2V0dGluZxIqLm1lbW9zLmFwaS52MS5VcGRhdGVJbnN0YW5jZVNldHRpbmdSZXF1ZXN0Gh0ubWVtb3MuYXBpLnYxLkluc3RhbmNlU2V0dGluZyJR2kETc2V0dGluZyx1cGRhdGVfbWFza4LT5JMCNToHc2V0dGluZzIqL2FwaS92MS97c2V0dGluZy5uYW1lPWluc3RhbmNlL3NldHRpbmdzLyp9Eo0BChFHZXRWQVBJRFB1YmxpY0tleRImLm1lbW9zLmFwaS52MS5HZXRWQVBJRFB1YmxpY0tleVJlcXVlc3QaJy5tZW1vcy5hcGkudjEuR2V0VkFQSURQdWJsaWNLZXlSZXNwb25zZSIngtPkkwIhEh8vYXBpL3YxL2luc3RhbmNlL3ZhcGlkUHVibGljS2V5QqwBChBjb20ubWVtb3MuYXBpLnYxQhRJbnN0YW5jZVNlcnZpY2VQcm90b1ABWjBnaXRodWIuY29tL3VzZW1lbW9zL21lbW9zL3Byb3RvL2dlbi9hcGkvdjE7YXBpdjGiAgNNQViqAgxNZW1vcy5BcGkuVjHKAgxNZW1vc1xBcGlcVjHiAhhNZW1vc1xBcGlcVjFcR1BCTWV0YWRhdGHqAg5NZW1vczo6QXBpOjpWMWIGcHJvdG8z", [file_api_v1_user_service, file_google_api_annotations, file_google_api_client, file_google_api_field_behavior, file_google_api_resource, file_google_protobuf_field_mask]);
 
 /**
  * Instance profile message containing basic instance information.
@@ -113,6 +113,12 @@ export type InstanceSetting = Message<"memos.api.v1.InstanceSetting"> & {
      */
     value: InstanceSetting_MemoRelatedSetting;
     case: "memoRelatedSetting";
+  } | {
+    /**
+     * @generated from field: memos.api.v1.InstanceSetting.WebPushSetting web_push_setting = 5;
+     */
+    value: InstanceSetting_WebPushSetting;
+    case: "webPushSetting";
   } | { case: undefined; value?: undefined };
 };
 
@@ -401,6 +407,43 @@ export const InstanceSetting_MemoRelatedSettingSchema: GenMessage<InstanceSettin
   messageDesc(file_api_v1_instance_service, 2, 2);
 
 /**
+ * Web push notification settings.
+ *
+ * @generated from message memos.api.v1.InstanceSetting.WebPushSetting
+ */
+export type InstanceSetting_WebPushSetting = Message<"memos.api.v1.InstanceSetting.WebPushSetting"> & {
+  /**
+   * Whether web push notifications are enabled.
+   *
+   * @generated from field: bool enabled = 1;
+   */
+  enabled: boolean;
+
+  /**
+   * The VAPID private key (base64 encoded).
+   * This should be kept secret and only visible to admins.
+   *
+   * @generated from field: string vapid_private_key = 2;
+   */
+  vapidPrivateKey: string;
+
+  /**
+   * The VAPID public key (base64 encoded).
+   * This is shared with clients for subscription.
+   *
+   * @generated from field: string vapid_public_key = 3;
+   */
+  vapidPublicKey: string;
+};
+
+/**
+ * Describes the message memos.api.v1.InstanceSetting.WebPushSetting.
+ * Use `create(InstanceSetting_WebPushSettingSchema)` to create a new message.
+ */
+export const InstanceSetting_WebPushSettingSchema: GenMessage<InstanceSetting_WebPushSetting> = /*@__PURE__*/
+  messageDesc(file_api_v1_instance_service, 2, 3);
+
+/**
  * Enumeration of instance setting keys.
  *
  * @generated from enum memos.api.v1.InstanceSetting.Key
@@ -431,6 +474,13 @@ export enum InstanceSetting_Key {
    * @generated from enum value: MEMO_RELATED = 3;
    */
   MEMO_RELATED = 3,
+
+  /**
+   * WEB_PUSH is the key for web push notification settings.
+   *
+   * @generated from enum value: WEB_PUSH = 4;
+   */
+  WEB_PUSH = 4,
 }
 
 /**
@@ -438,6 +488,43 @@ export enum InstanceSetting_Key {
  */
 export const InstanceSetting_KeySchema: GenEnum<InstanceSetting_Key> = /*@__PURE__*/
   enumDesc(file_api_v1_instance_service, 2, 0);
+
+/**
+ * Request for getting the VAPID public key.
+ *
+ * @generated from message memos.api.v1.GetVAPIDPublicKeyRequest
+ */
+export type GetVAPIDPublicKeyRequest = Message<"memos.api.v1.GetVAPIDPublicKeyRequest"> & {
+};
+
+/**
+ * Describes the message memos.api.v1.GetVAPIDPublicKeyRequest.
+ * Use `create(GetVAPIDPublicKeyRequestSchema)` to create a new message.
+ */
+export const GetVAPIDPublicKeyRequestSchema: GenMessage<GetVAPIDPublicKeyRequest> = /*@__PURE__*/
+  messageDesc(file_api_v1_instance_service, 3);
+
+/**
+ * Response containing the VAPID public key.
+ *
+ * @generated from message memos.api.v1.GetVAPIDPublicKeyResponse
+ */
+export type GetVAPIDPublicKeyResponse = Message<"memos.api.v1.GetVAPIDPublicKeyResponse"> & {
+  /**
+   * The VAPID public key for web push subscriptions (base64 URL-safe encoded).
+   * Empty if web push is not enabled.
+   *
+   * @generated from field: string public_key = 1;
+   */
+  publicKey: string;
+};
+
+/**
+ * Describes the message memos.api.v1.GetVAPIDPublicKeyResponse.
+ * Use `create(GetVAPIDPublicKeyResponseSchema)` to create a new message.
+ */
+export const GetVAPIDPublicKeyResponseSchema: GenMessage<GetVAPIDPublicKeyResponse> = /*@__PURE__*/
+  messageDesc(file_api_v1_instance_service, 4);
 
 /**
  * Request message for GetInstanceSetting method.
@@ -459,7 +546,7 @@ export type GetInstanceSettingRequest = Message<"memos.api.v1.GetInstanceSetting
  * Use `create(GetInstanceSettingRequestSchema)` to create a new message.
  */
 export const GetInstanceSettingRequestSchema: GenMessage<GetInstanceSettingRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_instance_service, 3);
+  messageDesc(file_api_v1_instance_service, 5);
 
 /**
  * Request message for UpdateInstanceSetting method.
@@ -487,7 +574,7 @@ export type UpdateInstanceSettingRequest = Message<"memos.api.v1.UpdateInstanceS
  * Use `create(UpdateInstanceSettingRequestSchema)` to create a new message.
  */
 export const UpdateInstanceSettingRequestSchema: GenMessage<UpdateInstanceSettingRequest> = /*@__PURE__*/
-  messageDesc(file_api_v1_instance_service, 4);
+  messageDesc(file_api_v1_instance_service, 6);
 
 /**
  * @generated from service memos.api.v1.InstanceService
@@ -522,6 +609,17 @@ export const InstanceService: GenService<{
     methodKind: "unary";
     input: typeof UpdateInstanceSettingRequestSchema;
     output: typeof InstanceSettingSchema;
+  },
+  /**
+   * GetVAPIDPublicKey returns the VAPID public key for web push notifications.
+   * This endpoint is public and doesn't require authentication.
+   *
+   * @generated from rpc memos.api.v1.InstanceService.GetVAPIDPublicKey
+   */
+  getVAPIDPublicKey: {
+    methodKind: "unary";
+    input: typeof GetVAPIDPublicKeyRequestSchema;
+    output: typeof GetVAPIDPublicKeyResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_api_v1_instance_service, 0);

@@ -42,6 +42,9 @@ const (
 	// InstanceServiceUpdateInstanceSettingProcedure is the fully-qualified name of the
 	// InstanceService's UpdateInstanceSetting RPC.
 	InstanceServiceUpdateInstanceSettingProcedure = "/memos.api.v1.InstanceService/UpdateInstanceSetting"
+	// InstanceServiceGetVAPIDPublicKeyProcedure is the fully-qualified name of the InstanceService's
+	// GetVAPIDPublicKey RPC.
+	InstanceServiceGetVAPIDPublicKeyProcedure = "/memos.api.v1.InstanceService/GetVAPIDPublicKey"
 )
 
 // InstanceServiceClient is a client for the memos.api.v1.InstanceService service.
@@ -52,6 +55,9 @@ type InstanceServiceClient interface {
 	GetInstanceSetting(context.Context, *connect.Request[v1.GetInstanceSettingRequest]) (*connect.Response[v1.InstanceSetting], error)
 	// Updates an instance setting.
 	UpdateInstanceSetting(context.Context, *connect.Request[v1.UpdateInstanceSettingRequest]) (*connect.Response[v1.InstanceSetting], error)
+	// GetVAPIDPublicKey returns the VAPID public key for web push notifications.
+	// This endpoint is public and doesn't require authentication.
+	GetVAPIDPublicKey(context.Context, *connect.Request[v1.GetVAPIDPublicKeyRequest]) (*connect.Response[v1.GetVAPIDPublicKeyResponse], error)
 }
 
 // NewInstanceServiceClient constructs a client for the memos.api.v1.InstanceService service. By
@@ -83,6 +89,12 @@ func NewInstanceServiceClient(httpClient connect.HTTPClient, baseURL string, opt
 			connect.WithSchema(instanceServiceMethods.ByName("UpdateInstanceSetting")),
 			connect.WithClientOptions(opts...),
 		),
+		getVAPIDPublicKey: connect.NewClient[v1.GetVAPIDPublicKeyRequest, v1.GetVAPIDPublicKeyResponse](
+			httpClient,
+			baseURL+InstanceServiceGetVAPIDPublicKeyProcedure,
+			connect.WithSchema(instanceServiceMethods.ByName("GetVAPIDPublicKey")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -91,6 +103,7 @@ type instanceServiceClient struct {
 	getInstanceProfile    *connect.Client[v1.GetInstanceProfileRequest, v1.InstanceProfile]
 	getInstanceSetting    *connect.Client[v1.GetInstanceSettingRequest, v1.InstanceSetting]
 	updateInstanceSetting *connect.Client[v1.UpdateInstanceSettingRequest, v1.InstanceSetting]
+	getVAPIDPublicKey     *connect.Client[v1.GetVAPIDPublicKeyRequest, v1.GetVAPIDPublicKeyResponse]
 }
 
 // GetInstanceProfile calls memos.api.v1.InstanceService.GetInstanceProfile.
@@ -108,6 +121,11 @@ func (c *instanceServiceClient) UpdateInstanceSetting(ctx context.Context, req *
 	return c.updateInstanceSetting.CallUnary(ctx, req)
 }
 
+// GetVAPIDPublicKey calls memos.api.v1.InstanceService.GetVAPIDPublicKey.
+func (c *instanceServiceClient) GetVAPIDPublicKey(ctx context.Context, req *connect.Request[v1.GetVAPIDPublicKeyRequest]) (*connect.Response[v1.GetVAPIDPublicKeyResponse], error) {
+	return c.getVAPIDPublicKey.CallUnary(ctx, req)
+}
+
 // InstanceServiceHandler is an implementation of the memos.api.v1.InstanceService service.
 type InstanceServiceHandler interface {
 	// Gets the instance profile.
@@ -116,6 +134,9 @@ type InstanceServiceHandler interface {
 	GetInstanceSetting(context.Context, *connect.Request[v1.GetInstanceSettingRequest]) (*connect.Response[v1.InstanceSetting], error)
 	// Updates an instance setting.
 	UpdateInstanceSetting(context.Context, *connect.Request[v1.UpdateInstanceSettingRequest]) (*connect.Response[v1.InstanceSetting], error)
+	// GetVAPIDPublicKey returns the VAPID public key for web push notifications.
+	// This endpoint is public and doesn't require authentication.
+	GetVAPIDPublicKey(context.Context, *connect.Request[v1.GetVAPIDPublicKeyRequest]) (*connect.Response[v1.GetVAPIDPublicKeyResponse], error)
 }
 
 // NewInstanceServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -143,6 +164,12 @@ func NewInstanceServiceHandler(svc InstanceServiceHandler, opts ...connect.Handl
 		connect.WithSchema(instanceServiceMethods.ByName("UpdateInstanceSetting")),
 		connect.WithHandlerOptions(opts...),
 	)
+	instanceServiceGetVAPIDPublicKeyHandler := connect.NewUnaryHandler(
+		InstanceServiceGetVAPIDPublicKeyProcedure,
+		svc.GetVAPIDPublicKey,
+		connect.WithSchema(instanceServiceMethods.ByName("GetVAPIDPublicKey")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/memos.api.v1.InstanceService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case InstanceServiceGetInstanceProfileProcedure:
@@ -151,6 +178,8 @@ func NewInstanceServiceHandler(svc InstanceServiceHandler, opts ...connect.Handl
 			instanceServiceGetInstanceSettingHandler.ServeHTTP(w, r)
 		case InstanceServiceUpdateInstanceSettingProcedure:
 			instanceServiceUpdateInstanceSettingHandler.ServeHTTP(w, r)
+		case InstanceServiceGetVAPIDPublicKeyProcedure:
+			instanceServiceGetVAPIDPublicKeyHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -170,4 +199,8 @@ func (UnimplementedInstanceServiceHandler) GetInstanceSetting(context.Context, *
 
 func (UnimplementedInstanceServiceHandler) UpdateInstanceSetting(context.Context, *connect.Request[v1.UpdateInstanceSettingRequest]) (*connect.Response[v1.InstanceSetting], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.InstanceService.UpdateInstanceSetting is not implemented"))
+}
+
+func (UnimplementedInstanceServiceHandler) GetVAPIDPublicKey(context.Context, *connect.Request[v1.GetVAPIDPublicKeyRequest]) (*connect.Response[v1.GetVAPIDPublicKeyResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("memos.api.v1.InstanceService.GetVAPIDPublicKey is not implemented"))
 }

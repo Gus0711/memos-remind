@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(if [ -d \"C:/Users/augus/Documents/GitHub/memos-remind/store/migration/sqlite/0.29\" ])",
+      "Bash(then echo \"Directory exists\")",
+      "Bash(else echo \"Directory does not exist\")",
+      "Bash(fi)",
+      "Bash(go build:*)",
+      "Bash(/c/Program Files/Go/bin/go build:*)",
+      "Bash(buf generate:*)",
+      "Bash(go get:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm exec tsc:*)",
+      "Bash(pnpm lint:fix:*)",
+      "Bash(dir:*)"
+    ]
+  }
+}

@@ -1247,11 +1247,9 @@ func (s *APIV1Service) ListUserNotifications(ctx context.Context, request *v1pb.
 	}
 
 	// Fetch inbox items from storage
-	// Filter at database level to only include MEMO_COMMENT notifications (ignore legacy VERSION_UPDATE entries)
-	memoCommentType := storepb.InboxMessage_MEMO_COMMENT
+	// Note: We don't filter by type here to include all notification types (MEMO_COMMENT, REMINDER)
 	inboxes, err := s.Store.ListInboxes(ctx, &store.FindInbox{
-		ReceiverID:  &userID,
-		MessageType: &memoCommentType,
+		ReceiverID: &userID,
 	})
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to list inboxes: %v", err)
@@ -1403,17 +1401,22 @@ func (*APIV1Service) convertInboxToUserNotification(_ context.Context, inbox *st
 		notification.Status = v1pb.UserNotification_STATUS_UNSPECIFIED
 	}
 
-	// Extract notification type and activity ID from inbox message
+	// Extract notification type and related IDs from inbox message
 	if inbox.Message != nil {
 		switch inbox.Message.Type {
 		case storepb.InboxMessage_MEMO_COMMENT:
 			notification.Type = v1pb.UserNotification_MEMO_COMMENT
+		case storepb.InboxMessage_REMINDER:
+			notification.Type = v1pb.UserNotification_REMINDER
 		default:
 			notification.Type = v1pb.UserNotification_TYPE_UNSPECIFIED
 		}
 
 		if inbox.Message.ActivityId != nil {
 			notification.ActivityId = inbox.Message.ActivityId
+		}
+		if inbox.Message.ReminderUid != nil {
+			notification.ReminderUid = inbox.Message.ReminderUid
 		}
 	}
 
@@ -1435,4 +1438,173 @@ func ExtractNotificationIDFromName(name string) (int32, error) {
 	}
 
 	return int32(id), nil
+}
+
+// ListUserPushSubscriptions lists all push subscriptions for a user.
+func (s *APIV1Service) ListUserPushSubscriptions(ctx context.Context, request *v1pb.ListUserPushSubscriptionsRequest) (*v1pb.ListUserPushSubscriptionsResponse, error) {
+	userID, err := ExtractUserIDFromName(request.Parent)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid user name: %v", err)
+	}
+
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user: %v", err)
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	if currentUser.ID != userID && currentUser.Role != store.RoleAdmin {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied")
+	}
+
+	subscriptions, err := s.Store.ListPushSubscriptions(ctx, &store.FindPushSubscription{
+		UserID: &userID,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to list push subscriptions: %v", err)
+	}
+
+	response := &v1pb.ListUserPushSubscriptionsResponse{
+		Subscriptions: make([]*v1pb.PushSubscription, 0, len(subscriptions)),
+	}
+	for _, sub := range subscriptions {
+		response.Subscriptions = append(response.Subscriptions, convertPushSubscriptionFromStore(sub, userID))
+	}
+
+	return response, nil
+}
+
+// CreateUserPushSubscription creates a new push subscription for a user.
+func (s *APIV1Service) CreateUserPushSubscription(ctx context.Context, request *v1pb.CreateUserPushSubscriptionRequest) (*v1pb.PushSubscription, error) {
+	userID, err := ExtractUserIDFromName(request.Parent)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid user name: %v", err)
+	}
+
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user: %v", err)
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	if currentUser.ID != userID {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied")
+	}
+
+	if request.Subscription == nil {
+		return nil, status.Errorf(codes.InvalidArgument, "subscription is required")
+	}
+	if request.Subscription.Endpoint == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "endpoint is required")
+	}
+	if request.Subscription.P256Dh == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "p256dh is required")
+	}
+	if request.Subscription.Auth == "" {
+		return nil, status.Errorf(codes.InvalidArgument, "auth is required")
+	}
+
+	// Check if subscription already exists (by endpoint)
+	existingSub, err := s.Store.GetPushSubscription(ctx, &store.FindPushSubscription{
+		Endpoint: &request.Subscription.Endpoint,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to check existing subscription: %v", err)
+	}
+	if existingSub != nil {
+		// Update existing subscription if it belongs to the same user
+		if existingSub.UserID == userID {
+			return convertPushSubscriptionFromStore(existingSub, userID), nil
+		}
+		// Delete old subscription and create new one for this user
+		if err := s.Store.DeletePushSubscription(ctx, &store.DeletePushSubscription{
+			Endpoint: &request.Subscription.Endpoint,
+		}); err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to delete old subscription: %v", err)
+		}
+	}
+
+	var userAgent *string
+	if request.Subscription.UserAgent != "" {
+		userAgent = &request.Subscription.UserAgent
+	}
+
+	subscription, err := s.Store.CreatePushSubscription(ctx, &store.PushSubscription{
+		UserID:    userID,
+		Endpoint:  request.Subscription.Endpoint,
+		P256dh:    request.Subscription.P256Dh,
+		Auth:      request.Subscription.Auth,
+		UserAgent: userAgent,
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to create push subscription: %v", err)
+	}
+
+	return convertPushSubscriptionFromStore(subscription, userID), nil
+}
+
+// DeleteUserPushSubscription deletes a push subscription.
+func (s *APIV1Service) DeleteUserPushSubscription(ctx context.Context, request *v1pb.DeleteUserPushSubscriptionRequest) (*emptypb.Empty, error) {
+	subID, userID, err := parsePushSubscriptionName(request.Name)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid subscription name: %v", err)
+	}
+
+	currentUser, err := s.fetchCurrentUser(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get current user: %v", err)
+	}
+	if currentUser == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "user not authenticated")
+	}
+	if currentUser.ID != userID && currentUser.Role != store.RoleAdmin {
+		return nil, status.Errorf(codes.PermissionDenied, "permission denied")
+	}
+
+	if err := s.Store.DeletePushSubscription(ctx, &store.DeletePushSubscription{
+		ID: &subID,
+	}); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to delete push subscription: %v", err)
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+// parsePushSubscriptionName parses a push subscription name and returns the subscription ID and user ID.
+// Format: users/{user}/pushSubscriptions/{push_subscription}.
+func parsePushSubscriptionName(name string) (int32, int32, error) {
+	pattern := regexp.MustCompile(`^users/(\d+)/pushSubscriptions/(\d+)$`)
+	matches := pattern.FindStringSubmatch(name)
+	if len(matches) != 3 {
+		return 0, 0, errors.Errorf("invalid push subscription name: %s", name)
+	}
+
+	userID, err := strconv.Atoi(matches[1])
+	if err != nil {
+		return 0, 0, errors.Errorf("invalid user ID: %s", matches[1])
+	}
+
+	subID, err := strconv.Atoi(matches[2])
+	if err != nil {
+		return 0, 0, errors.Errorf("invalid subscription ID: %s", matches[2])
+	}
+
+	return int32(subID), int32(userID), nil
+}
+
+// convertPushSubscriptionFromStore converts a store PushSubscription to API PushSubscription.
+func convertPushSubscriptionFromStore(sub *store.PushSubscription, userID int32) *v1pb.PushSubscription {
+	result := &v1pb.PushSubscription{
+		Name:       fmt.Sprintf("users/%d/pushSubscriptions/%d", userID, sub.ID),
+		Endpoint:   sub.Endpoint,
+		P256Dh:     sub.P256dh,
+		Auth:       sub.Auth,
+		CreateTime: timestamppb.New(time.Unix(sub.CreatedTs, 0)),
+	}
+	if sub.UserAgent != nil {
+		result.UserAgent = *sub.UserAgent
+	}
+	return result
 }

@@ -103,5 +103,39 @@ CREATE TABLE `reaction` (
   `creator_id` INT NOT NULL,
   `content_id` VARCHAR(256) NOT NULL,
   `reaction_type` VARCHAR(256) NOT NULL,
-  UNIQUE(`creator_id`,`content_id`,`reaction_type`)  
+  UNIQUE(`creator_id`,`content_id`,`reaction_type`)
 );
+
+-- reminder
+CREATE TABLE `reminder` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `uid` VARCHAR(32) NOT NULL UNIQUE,
+  `memo_id` INT NOT NULL,
+  `creator_id` INT NOT NULL,
+  `remind_at` BIGINT NOT NULL,
+  `status` VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+  `created_ts` BIGINT NOT NULL DEFAULT (UNIX_TIMESTAMP()),
+  `updated_ts` BIGINT NOT NULL DEFAULT (UNIX_TIMESTAMP()),
+  FOREIGN KEY (`memo_id`) REFERENCES `memo`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`creator_id`) REFERENCES `user`(`id`) ON DELETE CASCADE
+);
+
+CREATE INDEX `idx_reminder_remind_at` ON `reminder`(`remind_at`);
+CREATE INDEX `idx_reminder_creator_id` ON `reminder`(`creator_id`);
+CREATE INDEX `idx_reminder_status` ON `reminder`(`status`);
+CREATE INDEX `idx_reminder_memo_id` ON `reminder`(`memo_id`);
+
+-- push_subscription
+CREATE TABLE `push_subscription` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `endpoint` TEXT NOT NULL,
+  `p256dh` VARCHAR(255) NOT NULL,
+  `auth` VARCHAR(255) NOT NULL,
+  `user_agent` TEXT,
+  `created_ts` INT NOT NULL DEFAULT (UNIX_TIMESTAMP()),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_push_subscription_endpoint` (`endpoint`(500)),
+  KEY `idx_push_subscription_user_id` (`user_id`),
+  CONSTRAINT `fk_push_subscription_user` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

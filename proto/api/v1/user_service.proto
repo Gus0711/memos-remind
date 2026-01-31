@@ -156,6 +156,27 @@ service UserService {
     option (google.api.http) = {delete: "/api/v1/{name=users/*/notifications/*}"};
     option (google.api.method_signature) = "name";
   }
+
+  // ListUserPushSubscriptions lists push subscriptions for a user.
+  rpc ListUserPushSubscriptions(ListUserPushSubscriptionsRequest) returns (ListUserPushSubscriptionsResponse) {
+    option (google.api.http) = {get: "/api/v1/{parent=users/*}/pushSubscriptions"};
+    option (google.api.method_signature) = "parent";
+  }
+
+  // CreateUserPushSubscription creates a new push subscription for a user.
+  rpc CreateUserPushSubscription(CreateUserPushSubscriptionRequest) returns (PushSubscription) {
+    option (google.api.http) = {
+      post: "/api/v1/{parent=users/*}/pushSubscriptions"
+      body: "subscription"
+    };
+    option (google.api.method_signature) = "parent,subscription";
+  }
+
+  // DeleteUserPushSubscription deletes a push subscription.
+  rpc DeleteUserPushSubscription(DeleteUserPushSubscriptionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/api/v1/{name=users/*/pushSubscriptions/*}"};
+    option (google.api.method_signature) = "name";
+  }
 }
 
 message User {
@@ -626,8 +647,11 @@ message UserNotification {
   // The type of the notification.
   Type type = 5 [(google.api.field_behavior) = OUTPUT_ONLY];
 
-  // The activity ID associated with this notification.
+  // The activity ID associated with this notification (for MEMO_COMMENT type).
   optional int32 activity_id = 6 [(google.api.field_behavior) = OPTIONAL];
+
+  // The reminder UID associated with this notification (for REMINDER type).
+  optional string reminder_uid = 7 [(google.api.field_behavior) = OPTIONAL];
 
   enum Status {
     STATUS_UNSPECIFIED = 0;
@@ -638,6 +662,7 @@ message UserNotification {
   enum Type {
     TYPE_UNSPECIFIED = 0;
     MEMO_COMMENT = 1;
+    REMINDER = 2;
   }
 }
 
@@ -669,5 +694,71 @@ message DeleteUserNotificationRequest {
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
     (google.api.resource_reference) = {type: "memos.api.v1/UserNotification"}
+  ];
+}
+
+// PushSubscription represents a web push subscription for a user device.
+message PushSubscription {
+  option (google.api.resource) = {
+    type: "memos.api.v1/PushSubscription"
+    pattern: "users/{user}/pushSubscriptions/{push_subscription}"
+    name_field: "name"
+    singular: "pushSubscription"
+    plural: "pushSubscriptions"
+  };
+
+  // The resource name of the push subscription.
+  // Format: users/{user}/pushSubscriptions/{push_subscription}
+  string name = 1 [
+    (google.api.field_behavior) = OUTPUT_ONLY,
+    (google.api.field_behavior) = IDENTIFIER
+  ];
+
+  // The push endpoint URL.
+  string endpoint = 2 [(google.api.field_behavior) = REQUIRED];
+
+  // The p256dh key for encryption.
+  string p256dh = 3 [(google.api.field_behavior) = REQUIRED];
+
+  // The auth secret for encryption.
+  string auth = 4 [(google.api.field_behavior) = REQUIRED];
+
+  // Optional. The user agent of the device.
+  string user_agent = 5 [(google.api.field_behavior) = OPTIONAL];
+
+  // The creation timestamp.
+  google.protobuf.Timestamp create_time = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
+
+message ListUserPushSubscriptionsRequest {
+  // The parent user resource.
+  // Format: users/{user}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+}
+
+message ListUserPushSubscriptionsResponse {
+  repeated PushSubscription subscriptions = 1;
+}
+
+message CreateUserPushSubscriptionRequest {
+  // The parent user resource.
+  // Format: users/{user}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/User"}
+  ];
+
+  // The push subscription to create.
+  PushSubscription subscription = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message DeleteUserPushSubscriptionRequest {
+  // Format: users/{user}/pushSubscriptions/{push_subscription}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {type: "memos.api.v1/PushSubscription"}
   ];
 }

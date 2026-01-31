@@ -31,6 +31,12 @@ service InstanceService {
     };
     option (google.api.method_signature) = "setting,update_mask";
   }
+
+  // GetVAPIDPublicKey returns the VAPID public key for web push notifications.
+  // This endpoint is public and doesn't require authentication.
+  rpc GetVAPIDPublicKey(GetVAPIDPublicKeyRequest) returns (GetVAPIDPublicKeyResponse) {
+    option (google.api.http) = {get: "/api/v1/instance/vapidPublicKey"};
+  }
 }
 
 // Instance profile message containing basic instance information.
@@ -69,6 +75,7 @@ message InstanceSetting {
     GeneralSetting general_setting = 2;
     StorageSetting storage_setting = 3;
     MemoRelatedSetting memo_related_setting = 4;
+    WebPushSetting web_push_setting = 5;
   }
 
   // Enumeration of instance setting keys.
@@ -80,6 +87,8 @@ message InstanceSetting {
     STORAGE = 2;
     // MEMO_RELATED is the key for memo related settings.
     MEMO_RELATED = 3;
+    // WEB_PUSH is the key for web push notification settings.
+    WEB_PUSH = 4;
   }
 
   // General instance settings configuration.
@@ -159,6 +168,28 @@ message InstanceSetting {
     // reactions is the list of reactions.
     repeated string reactions = 7;
   }
+
+  // Web push notification settings.
+  message WebPushSetting {
+    // Whether web push notifications are enabled.
+    bool enabled = 1;
+    // The VAPID private key (base64 encoded).
+    // This should be kept secret and only visible to admins.
+    string vapid_private_key = 2;
+    // The VAPID public key (base64 encoded).
+    // This is shared with clients for subscription.
+    string vapid_public_key = 3;
+  }
+}
+
+// Request for getting the VAPID public key.
+message GetVAPIDPublicKeyRequest {}
+
+// Response containing the VAPID public key.
+message GetVAPIDPublicKeyResponse {
+  // The VAPID public key for web push subscriptions (base64 URL-safe encoded).
+  // Empty if web push is not enabled.
+  string public_key = 1;
 }
 
 // Request message for GetInstanceSetting method.

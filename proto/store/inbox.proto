@@ -9,10 +9,14 @@ message InboxMessage {
   Type type = 1;
   // The system-generated unique ID of related activity.
   optional int32 activity_id = 2;
+  // The UID of the related reminder (for REMINDER type).
+  optional string reminder_uid = 3;
 
   enum Type {
     TYPE_UNSPECIFIED = 0;
     // Memo comment notification.
     MEMO_COMMENT = 1;
+    // Reminder notification.
+    REMINDER = 2;
   }
 }

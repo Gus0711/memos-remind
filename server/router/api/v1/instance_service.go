@@ -46,6 +46,8 @@ func (s *APIV1Service) GetInstanceSetting(ctx context.Context, request *v1pb.Get
 		_, err = s.Store.GetInstanceMemoRelatedSetting(ctx)
 	case storepb.InstanceSettingKey_STORAGE:
 		_, err = s.Store.GetInstanceStorageSetting(ctx)
+	case storepb.InstanceSettingKey_WEB_PUSH:
+		_, err = s.Store.GetInstanceWebPushSetting(ctx)
 	default:
 		return nil, status.Errorf(codes.InvalidArgument, "unsupported instance setting key: %v", instanceSettingKey)
 	}
@@ -63,8 +65,8 @@ func (s *APIV1Service) GetInstanceSetting(ctx context.Context, request *v1pb.Get
 		return nil, status.Errorf(codes.NotFound, "instance setting not found")
 	}
 
-	// For storage setting, only admin can get it.
-	if instanceSetting.Key == storepb.InstanceSettingKey_STORAGE {
+	// For storage and web_push settings, only admin can get them.
+	if instanceSetting.Key == storepb.InstanceSettingKey_STORAGE || instanceSetting.Key == storepb.InstanceSettingKey_WEB_PUSH {
 		user, err := s.fetchCurrentUser(ctx)
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "failed to get current user: %v", err)
@@ -121,6 +123,10 @@ func convertInstanceSettingFromStore(setting *storepb.InstanceSetting) *v1pb.Ins
 		instanceSetting.Value = &v1pb.InstanceSetting_MemoRelatedSetting_{
 			MemoRelatedSetting: convertInstanceMemoRelatedSettingFromStore(setting.GetMemoRelatedSetting()),
 		}
+	case *storepb.InstanceSetting_WebPushSetting:
+		instanceSetting.Value = &v1pb.InstanceSetting_WebPushSetting_{
+			WebPushSetting: convertInstanceWebPushSettingFromStore(setting.GetWebPushSetting()),
+		}
 	}
 	return instanceSetting
 }
@@ -145,6 +151,10 @@ func convertInstanceSettingToStore(setting *v1pb.InstanceSetting) *storepb.Insta
 	case storepb.InstanceSettingKey_MEMO_RELATED:
 		instanceSetting.Value = &storepb.InstanceSetting_MemoRelatedSetting{
 			MemoRelatedSetting: convertInstanceMemoRelatedSettingToStore(setting.GetMemoRelatedSetting()),
+		}
+	case storepb.InstanceSettingKey_WEB_PUSH:
+		instanceSetting.Value = &storepb.InstanceSetting_WebPushSetting{
+			WebPushSetting: convertInstanceWebPushSettingToStore(setting.GetWebPushSetting()),
 		}
 	default:
 		// Keep the default GeneralSetting value
@@ -282,4 +292,39 @@ func (s *APIV1Service) GetInstanceAdmin(ctx context.Context) (*v1pb.User, error)
 	}
 
 	return convertUserFromStore(user), nil
+}
+
+func (s *APIV1Service) GetVAPIDPublicKey(ctx context.Context, _ *v1pb.GetVAPIDPublicKeyRequest) (*v1pb.GetVAPIDPublicKeyResponse, error) {
+	webPushSetting, err := s.Store.GetInstanceWebPushSetting(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get web push setting: %v", err)
+	}
+
+	response := &v1pb.GetVAPIDPublicKeyResponse{}
+	if webPushSetting != nil && webPushSetting.Enabled {
+		response.PublicKey = webPushSetting.VapidPublicKey
+	}
+	return response, nil
+}
+
+func convertInstanceWebPushSettingFromStore(setting *storepb.InstanceWebPushSetting) *v1pb.InstanceSetting_WebPushSetting {
+	if setting == nil {
+		return nil
+	}
+	return &v1pb.InstanceSetting_WebPushSetting{
+		Enabled:         setting.Enabled,
+		VapidPrivateKey: setting.VapidPrivateKey,
+		VapidPublicKey:  setting.VapidPublicKey,
+	}
+}
+
+func convertInstanceWebPushSettingToStore(setting *v1pb.InstanceSetting_WebPushSetting) *storepb.InstanceWebPushSetting {
+	if setting == nil {
+		return nil
+	}
+	return &storepb.InstanceWebPushSetting{
+		Enabled:         setting.Enabled,
+		VapidPrivateKey: setting.VapidPrivateKey,
+		VapidPublicKey:  setting.VapidPublicKey,
+	}
 }

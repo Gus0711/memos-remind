@@ -37,6 +37,8 @@ func (s *Store) UpsertInstanceSetting(ctx context.Context, upsert *storepb.Insta
 		valueBytes, err = protojson.Marshal(upsert.GetStorageSetting())
 	} else if upsert.Key == storepb.InstanceSettingKey_MEMO_RELATED {
 		valueBytes, err = protojson.Marshal(upsert.GetMemoRelatedSetting())
+	} else if upsert.Key == storepb.InstanceSettingKey_WEB_PUSH {
+		valueBytes, err = protojson.Marshal(upsert.GetWebPushSetting())
 	} else {
 		return nil, errors.Errorf("unsupported instance setting key: %v", upsert.Key)
 	}
@@ -202,6 +204,25 @@ func (s *Store) GetInstanceStorageSetting(ctx context.Context) (*storepb.Instanc
 	return instanceStorageSetting, nil
 }
 
+func (s *Store) GetInstanceWebPushSetting(ctx context.Context) (*storepb.InstanceWebPushSetting, error) {
+	instanceSetting, err := s.GetInstanceSetting(ctx, &FindInstanceSetting{
+		Name: storepb.InstanceSettingKey_WEB_PUSH.String(),
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to get instance web push setting")
+	}
+
+	instanceWebPushSetting := &storepb.InstanceWebPushSetting{}
+	if instanceSetting != nil {
+		instanceWebPushSetting = instanceSetting.GetWebPushSetting()
+	}
+	s.instanceSettingCache.Set(ctx, storepb.InstanceSettingKey_WEB_PUSH.String(), &storepb.InstanceSetting{
+		Key:   storepb.InstanceSettingKey_WEB_PUSH,
+		Value: &storepb.InstanceSetting_WebPushSetting{WebPushSetting: instanceWebPushSetting},
+	})
+	return instanceWebPushSetting, nil
+}
+
 func convertInstanceSettingFromRaw(instanceSettingRaw *InstanceSetting) (*storepb.InstanceSetting, error) {
 	instanceSetting := &storepb.InstanceSetting{
 		Key: storepb.InstanceSettingKey(storepb.InstanceSettingKey_value[instanceSettingRaw.Name]),
@@ -231,6 +252,12 @@ func convertInstanceSettingFromRaw(instanceSettingRaw *InstanceSetting) (*storep
 			return nil, err
 		}
 		instanceSetting.Value = &storepb.InstanceSetting_MemoRelatedSetting{MemoRelatedSetting: memoRelatedSetting}
+	case storepb.InstanceSettingKey_WEB_PUSH.String():
+		webPushSetting := &storepb.InstanceWebPushSetting{}
+		if err := protojsonUnmarshaler.Unmarshal([]byte(instanceSettingRaw.Value), webPushSetting); err != nil {
+			return nil, err
+		}
+		instanceSetting.Value = &storepb.InstanceSetting_WebPushSetting{WebPushSetting: webPushSetting}
 	default:
 		// Skip unsupported instance setting key.
 		return nil, nil

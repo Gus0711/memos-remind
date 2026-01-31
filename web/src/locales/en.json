@@ -61,6 +61,7 @@
     "mark": "Mark",
     "memo": "Memo",
     "memos": "Memos",
+    "reminders": "Reminders",
     "name": "Name",
     "new": "New",
     "nickname": "Nickname",
@@ -106,7 +107,10 @@
     "version": "Version",
     "visibility": "Visibility",
     "yourself": "Yourself",
-    "more": "More"
+    "more": "More",
+    "enable": "Enable",
+    "disable": "Disable",
+    "loading": "Loading..."
   },
   "days": {
     "fri": "Fri",
@@ -211,6 +215,47 @@
     "embedded-usage": "Use as Embedded Content",
     "no-memos-found": "No memos found",
     "search-placeholder": "Search content"
+  },
+  "reminder": {
+    "title": "Reminders",
+    "add-reminder": "Add reminder",
+    "edit-reminder": "Edit reminder",
+    "no-reminders": "No reminders",
+    "upcoming-reminders": "Upcoming reminders",
+    "past-reminders": "Past reminders",
+    "remind-me": "Remind me",
+    "remind-at": "Remind at",
+    "status": {
+      "pending": "Pending",
+      "triggered": "Triggered",
+      "dismissed": "Dismissed"
+    },
+    "shortcuts": {
+      "in-1-hour": "In 1 hour",
+      "in-3-hours": "In 3 hours",
+      "tonight": "Tonight",
+      "tomorrow-morning": "Tomorrow morning",
+      "tomorrow-evening": "Tomorrow evening",
+      "in-1-week": "In 1 week",
+      "custom": "Custom date/time"
+    },
+    "actions": {
+      "delete": "Delete reminder",
+      "dismiss": "Dismiss",
+      "snooze": "Snooze"
+    },
+    "messages": {
+      "created": "Reminder created",
+      "updated": "Reminder updated",
+      "deleted": "Reminder deleted",
+      "dismissed": "Reminder dismissed",
+      "delete-confirm": "Are you sure you want to delete this reminder?",
+      "must-be-future": "Reminder time must be in the future"
+    },
+    "notification": {
+      "title": "Reminder",
+      "body": "You have a reminder for this memo"
+    }
   },
   "resource": {
     "clear": "Clear",
@@ -319,6 +364,15 @@
       "default-memo-sort-option": "Memo display time",
       "default-memo-visibility": "Default memo visibility",
       "theme": "Theme"
+    },
+    "push-notifications": {
+      "title": "Push Notifications",
+      "description": "Get browser notifications for reminders even when the tab is closed",
+      "tooltip": "Enable push notifications to receive alerts for your memo reminders",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "permission-denied": "Permission denied",
+      "not-configured": "Not configured by admin"
     },
     "shortcut": {
       "delete-confirm": "Are you sure you want to delete shortcut `{{title}}`?",
@@ -462,6 +516,7 @@
   "tooltip": {
     "link-memo": "Link Memo",
     "markdown-menu": "Markdown",
+    "reminder": "Set reminder",
     "select-location": "Location",
     "select-visibility": "Visibility",
     "tags": "Tags",

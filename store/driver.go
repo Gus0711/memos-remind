@@ -67,4 +67,15 @@ type Driver interface {
 	ListReactions(ctx context.Context, find *FindReaction) ([]*Reaction, error)
 	GetReaction(ctx context.Context, find *FindReaction) (*Reaction, error)
 	DeleteReaction(ctx context.Context, delete *DeleteReaction) error
+
+	// Reminder model related methods.
+	CreateReminder(ctx context.Context, create *Reminder) (*Reminder, error)
+	ListReminders(ctx context.Context, find *FindReminder) ([]*Reminder, error)
+	UpdateReminder(ctx context.Context, update *UpdateReminder) error
+	DeleteReminder(ctx context.Context, delete *DeleteReminder) error
+
+	// PushSubscription model related methods.
+	CreatePushSubscription(ctx context.Context, create *PushSubscription) (*PushSubscription, error)
+	ListPushSubscriptions(ctx context.Context, find *FindPushSubscription) ([]*PushSubscription, error)
+	DeletePushSubscription(ctx context.Context, delete *DeletePushSubscription) error
 }

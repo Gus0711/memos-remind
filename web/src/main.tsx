@@ -22,6 +22,44 @@ import "katex/dist/katex.min.css";
 applyThemeEarly();
 applyLocaleEarly();
 
+// Register service worker for push notifications
+const registerServiceWorker = async () => {
+  if (!("serviceWorker" in navigator)) {
+    console.log("[SW] Service Worker not supported");
+    return;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.register("/sw.js", {
+      scope: "/",
+    });
+
+    console.log("[SW] Service Worker registered successfully:", registration.scope);
+
+    // Check for updates periodically
+    registration.addEventListener("updatefound", () => {
+      const newWorker = registration.installing;
+      if (newWorker) {
+        console.log("[SW] New Service Worker installing...");
+        newWorker.addEventListener("statechange", () => {
+          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+            console.log("[SW] New Service Worker installed, refresh to update");
+          }
+        });
+      }
+    });
+  } catch (error) {
+    console.error("[SW] Service Worker registration failed:", error);
+  }
+};
+
+// Register SW after page load to not block initial render
+if (document.readyState === "complete") {
+  registerServiceWorker();
+} else {
+  window.addEventListener("load", registerServiceWorker);
+}
+
 // Inner component that initializes contexts
 function AppInitializer({ children }: { children: React.ReactNode }) {
   const { isInitialized: authInitialized, initialize: initAuth } = useAuth();

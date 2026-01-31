@@ -22,8 +22,8 @@ An open-source, self-hosted note-taking service. Your thoughts, your data, your 
 
 ---
 
-[**TestMu AI** - The world’s first full-stack Agentic AI Quality Engineering platform](https://www.testmu.ai/?utm_source=memos&utm_medium=sponsor)
-  
+[**TestMu AI** - The world's first full-stack Agentic AI Quality Engineering platform](https://www.testmu.ai/?utm_source=memos&utm_medium=sponsor)
+
 <a href="https://www.testmu.ai/?utm_source=memos&utm_medium=sponsor" target="_blank" rel="noopener">
   <img src="https://usememos.com/sponsors/testmu.svg" alt="TestMu AI" height="36" />
 </a>
@@ -72,8 +72,18 @@ Memos is a privacy-first, self-hosted knowledge base that works seamlessly for p
   - Easy integration with existing workflows
 
 - **🎨 Beautiful Interface**
+
   - Clean, minimal design and dark mode support
   - Mobile-responsive layout
+
+- **🔔 Memo Reminders & Web Push Notifications** *(New)*
+
+  - Set date/time reminders on any memo
+  - Receive browser and mobile push notifications even when the tab is closed
+  - VAPID keys auto-generated on first startup — zero configuration needed
+  - Per-device push subscription management
+  - Background scheduler checks due reminders every 30 seconds
+  - Works on Chrome desktop (WNS) and Chrome Android (FCM)
 
 ## Quick Start
 
@@ -101,6 +111,41 @@ Don't want to install yet? Try our [live demo](https://demo.usememos.com/) first
 - **Build from Source** - For development and customization
 
 See our [installation guide](https://usememos.com/docs/installation) for detailed instructions.
+
+## Reminders & Push Notifications
+
+### How it works
+
+1. **Set a reminder** — Click the bell icon on any memo and pick a date and time.
+2. **Enable push notifications** — Go to *Settings → Push Notifications* and click *Enable*. Your browser will ask for notification permission.
+3. **Receive notifications** — When a reminder is due, you get a push notification on every device where you enabled it, even if the tab is closed.
+
+### Technical details
+
+The reminder system adds two database tables (`reminder` and `push_subscription`) and seven new API endpoints via Connect RPC:
+
+| Endpoint | Description |
+| --- | --- |
+| `ReminderService/CreateReminder` | Create a reminder on a memo |
+| `ReminderService/ListReminders` | List reminders for the current user |
+| `ReminderService/DeleteReminder` | Delete a reminder |
+| `UserService/CreateUserPushSubscription` | Register a device for push |
+| `UserService/DeleteUserPushSubscription` | Unregister a device |
+| `UserService/ListUserPushSubscriptions` | List registered devices |
+| `UserService/GetVAPIDPublicKey` | Get the server's VAPID public key |
+
+VAPID keys are generated automatically on first startup and stored in system settings. No manual configuration is required. Push delivery uses the [Web Push protocol](https://web.dev/articles/push-notifications-overview) via the `webpush-go` library.
+
+### Browser support
+
+| Browser | Desktop | Mobile |
+| --- | --- | --- |
+| Chrome | ✅ | ✅ |
+| Edge | ✅ | ✅ |
+| Firefox | ✅ | ✅ |
+| Safari | ✅ (macOS 13+) | ✅ (iOS 16.4+) |
+
+> **Note:** Push notifications do not work in incognito/private browsing mode.
 
 ## Contributing
 

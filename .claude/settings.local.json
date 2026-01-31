@@ -13,7 +13,10 @@
       "Bash(pnpm lint:*)",
       "Bash(pnpm exec tsc:*)",
       "Bash(pnpm lint:fix:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm release)",
+      "Bash(test -f:*)"
     ]
   }
 }

@@ -25,16 +25,20 @@ applyLocaleEarly();
 // Register service worker for push notifications
 const registerServiceWorker = async () => {
   if (!("serviceWorker" in navigator)) {
-    console.log("[SW] Service Worker not supported");
+    console.log("[SW] Service Worker not supported in this browser");
     return;
   }
 
+  console.log("[SW] Registering service worker...");
+
   try {
+    // Use absolute path to ensure correct resolution
     const registration = await navigator.serviceWorker.register("/sw.js", {
       scope: "/",
     });
 
     console.log("[SW] Service Worker registered successfully:", registration.scope);
+    console.log("[SW] Registration state:", registration.active ? "active" : registration.waiting ? "waiting" : "installing");
 
     // Check for updates periodically
     registration.addEventListener("updatefound", () => {
@@ -42,22 +46,36 @@ const registerServiceWorker = async () => {
       if (newWorker) {
         console.log("[SW] New Service Worker installing...");
         newWorker.addEventListener("statechange", () => {
+          console.log("[SW] Service Worker state changed:", newWorker.state);
           if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
             console.log("[SW] New Service Worker installed, refresh to update");
           }
         });
       }
     });
+
+    // Log when the SW becomes ready
+    navigator.serviceWorker.ready.then((reg) => {
+      console.log("[SW] Service Worker is ready and active:", reg.scope);
+    });
   } catch (error) {
     console.error("[SW] Service Worker registration failed:", error);
+    // Log more details about the error
+    if (error instanceof Error) {
+      console.error("[SW] Error name:", error.name);
+      console.error("[SW] Error message:", error.message);
+    }
   }
 };
 
-// Register SW after page load to not block initial render
-if (document.readyState === "complete") {
-  registerServiceWorker();
+// Register SW immediately - don't wait for load event
+// This ensures the SW is registered as early as possible
+if (document.readyState === "loading") {
+  // DOM is still loading, wait for DOMContentLoaded (faster than load)
+  document.addEventListener("DOMContentLoaded", registerServiceWorker);
 } else {
-  window.addEventListener("load", registerServiceWorker);
+  // DOM is already ready, register immediately
+  registerServiceWorker();
 }
 
 // Inner component that initializes contexts

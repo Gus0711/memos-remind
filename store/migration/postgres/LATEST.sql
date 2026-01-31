@@ -130,7 +130,7 @@ CREATE TABLE push_subscription (
   endpoint TEXT NOT NULL UNIQUE,
   p256dh VARCHAR(255) NOT NULL,
   auth VARCHAR(255) NOT NULL,
-  user_agent TEXT,
+  user_agent TEXT NOT NULL DEFAULT '',
   created_ts INTEGER NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())::INTEGER,
   CONSTRAINT fk_push_subscription_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE
 );

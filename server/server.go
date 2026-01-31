@@ -38,7 +38,7 @@ type Server struct {
 }
 
 func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store) (*Server, error) {
-	fmt.Println("=== NewServer: Starting server initialization ===")
+	slog.Info("starting server initialization")
 
 	// Initialize notification service with providers
 	notificationService := notification.NewService()
@@ -64,11 +64,11 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 	}
 
 	// Initialize VAPID keys for web push notifications
-	fmt.Println("=== NewServer: About to initialize web push setting ===")
+	slog.Info("initializing web push settings")
 	if err := s.initializeWebPushSetting(ctx); err != nil {
-		fmt.Printf("=== NewServer: FAILED to initialize web push setting: %v ===\n", err)
+		slog.Error("failed to initialize web push setting", "error", err)
 	} else {
-		fmt.Println("=== NewServer: Web push setting initialization COMPLETED ===")
+		slog.Info("web push settings initialized successfully")
 	}
 
 	secret := "usememos"
@@ -212,46 +212,54 @@ func (s *Server) getOrUpsertInstanceBasicSetting(ctx context.Context) (*storepb.
 
 // initializeWebPushSetting generates VAPID keys if they don't exist.
 func (s *Server) initializeWebPushSetting(ctx context.Context) error {
-	fmt.Println(">>> initializeWebPushSetting: STARTING")
+	slog.Debug("initializeWebPushSetting: starting")
+
 	webPushSetting, err := s.Store.GetInstanceWebPushSetting(ctx)
 	if err != nil {
-		fmt.Printf(">>> initializeWebPushSetting: FAILED to get setting: %v\n", err)
+		slog.Error("initializeWebPushSetting: failed to get setting", "error", err)
 		return errors.Wrap(err, "failed to get web push setting")
 	}
-	fmt.Printf(">>> initializeWebPushSetting: got setting - privateKeyLen=%d, publicKeyLen=%d, enabled=%v\n",
-		len(webPushSetting.VapidPrivateKey), len(webPushSetting.VapidPublicKey), webPushSetting.Enabled)
+
+	slog.Debug("initializeWebPushSetting: got current setting",
+		"hasPrivateKey", webPushSetting.VapidPrivateKey != "",
+		"hasPublicKey", webPushSetting.VapidPublicKey != "",
+		"enabled", webPushSetting.Enabled)
 
 	// If VAPID keys already exist, no need to generate
 	if webPushSetting.VapidPrivateKey != "" && webPushSetting.VapidPublicKey != "" {
-		fmt.Println(">>> initializeWebPushSetting: VAPID keys already exist, skipping generation")
+		slog.Info("VAPID keys already configured, skipping generation")
 		return nil
 	}
 
-	fmt.Println(">>> initializeWebPushSetting: Generating new VAPID keys...")
+	slog.Info("no existing VAPID keys found, generating new key pair")
+
 	// Generate new VAPID keys
 	privateKey, publicKey, err := webpush.GenerateVAPIDKeys()
 	if err != nil {
-		fmt.Printf(">>> initializeWebPushSetting: FAILED to generate keys: %v\n", err)
+		slog.Error("initializeWebPushSetting: failed to generate VAPID keys", "error", err)
 		return errors.Wrap(err, "failed to generate VAPID keys")
 	}
-	fmt.Printf(">>> initializeWebPushSetting: Generated keys - privateKeyLen=%d, publicKeyLen=%d\n",
-		len(privateKey), len(publicKey))
+
+	slog.Debug("initializeWebPushSetting: VAPID keys generated",
+		"publicKeyLen", len(publicKey),
+		"privateKeyLen", len(privateKey))
 
 	// Save the new keys (enabled by default)
 	webPushSetting.VapidPrivateKey = privateKey
 	webPushSetting.VapidPublicKey = publicKey
 	webPushSetting.Enabled = true
 
-	fmt.Println(">>> initializeWebPushSetting: Saving to store...")
+	slog.Debug("initializeWebPushSetting: saving VAPID keys to database")
+
 	_, err = s.Store.UpsertInstanceSetting(ctx, &storepb.InstanceSetting{
 		Key:   storepb.InstanceSettingKey_WEB_PUSH,
 		Value: &storepb.InstanceSetting_WebPushSetting{WebPushSetting: webPushSetting},
 	})
 	if err != nil {
-		fmt.Printf(">>> initializeWebPushSetting: FAILED to save: %v\n", err)
+		slog.Error("initializeWebPushSetting: failed to save VAPID keys", "error", err)
 		return errors.Wrap(err, "failed to save web push setting")
 	}
 
-	fmt.Println(">>> initializeWebPushSetting: SUCCESS - VAPID keys are now configured!")
+	slog.Info("VAPID keys generated and saved successfully for web push notifications")
 	return nil
 }

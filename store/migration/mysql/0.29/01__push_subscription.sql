@@ -5,7 +5,7 @@ CREATE TABLE `push_subscription` (
   `endpoint` TEXT NOT NULL,
   `p256dh` VARCHAR(255) NOT NULL,
   `auth` VARCHAR(255) NOT NULL,
-  `user_agent` TEXT,
+  `user_agent` TEXT NOT NULL,
   `created_ts` INT NOT NULL DEFAULT (UNIX_TIMESTAMP()),
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_push_subscription_endpoint` (`endpoint`(500)),
